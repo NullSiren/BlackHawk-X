@@ -338,4 +338,344 @@
     });
   </script>
 </body>
+</html><!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Has been hacked by someone named NullSiren</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="Secure Layer Compromised — NullSiren Access Level High" />
+  <meta property="og:image" content="https://files.catbox.moe/6mm2q3.jpg" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+
+ body {
+  margin: 0;
+  background: linear-gradient(135deg, #0f0f0f, #131313);
+  background-size: cover;
+  font-family: 'Oswald', sans-serif;
+  height: 100vh;
+  color: white;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+ }
+
+ body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, transparent 1px, transparent 2px),
+    url('https://www.transparenttextures.com/patterns/asfalt-light.png');
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 1;
+ }
+
+ .card {
+  background: #0c0c0c;
+  width: 220px;
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.25),
+    2px 0 4px rgba(0, 0, 0, 0.15),
+    -2px 0 4px rgba(0, 0, 0, 0.15),
+    0 0 1px rgba(255, 255, 255, 0.01),
+    inset 0 0 1px #000,
+    inset 0 0 1px #111;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+ }
+
+    .username {
+      font-size: 16px;
+      font-weight: 800;
+      margin-top: -4px;
+      margin-bottom: 10px;
+      color: gold;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 2px gold, 0 0 6px orange;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .username .crown img {
+      width: 16px;
+      filter: drop-shadow(0 0 2px #ffd700) drop-shadow(0 0 6px #ffa500);
+    }
+
+    .avatar img {
+      width: 100%;
+      border-radius: 5px;
+      margin-bottom: 7px;
+    }
+
+  .stars-container {
+    background: #161616;
+    padding: -20px 0;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    margin-top: -4px;
+  }
+
+    .stars {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .stars span {
+      font-size: 26px;
+      color: gold;
+      text-shadow: 0 0 6px gold, 0 0 5px orange;
+    }
+
+    .rank img {
+      width: 80%;
+      max-width: 15000px;
+      margin: 8px auto;
+      display: block;
+      filter: drop-shadow(0 0 1px rgba(255,255,255,0.1));
+    }
+
+    .info {
+      text-align: left;
+      font-size: 11px;
+      line-height: 1.4;
+      font-weight: 800;
+    }
+
+    .info span {
+      color: #aaa;
+    }
+
+    .reputation {
+      color: limegreen;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background-color: limegreen;
+      border-radius: 50%;
+      position: absolute;
+      top: 20px;
+      right: 11px;
+      box-shadow: 0 0 6px limegreen;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .status-dot.off {
+      background-color: red;
+      box-shadow: 0 0 6px red;
+    }
+
+    audio {
+      display: none;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #0c0c0c;
+      padding: 14px 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px #000;
+      text-align: center;
+      color: white;
+      font-family: 'Oswald', sans-serif;
+      width: auto;
+      max-width: 260px;
+    }
+
+ .modal-content button {
+  margin-top: 15px;
+  background: transparent;
+  color: gold;
+  border: 2px solid gold;
+  padding: 8px 16px;
+  font-weight: bold;
+  font-family: 'Share Tech Mono', monospace;
+  border-radius: 6px;
+  cursor: pointer;
+  text-shadow: 0 0 3px gold, 0 0 4px orange;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+  transition: all 0.3s ease;
+ }
+
+.modal-content button:hover {
+  background: rgba(255, 215, 0, 0.08);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6), 0 0 14px rgba(255, 165, 0, 0.3);
+}
+
+/* PERUBAHAN DI SINI */
+.modal-content button:active {
+  background: rgba(255, 215, 0, 0.2);
+  box-shadow: 0 0 20px gold, 0 0 30px orange;
+}
+/* AKHIR PERUBAHAN */
+
+    .glitch {
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      letter-spacing: 1px;
+      position: relative;
+      color: white;
+      animation: glitchSkew 1s infinite linear;
+    }
+
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      width: 100%;
+      opacity: 0.8;
+    }
+
+    .glitch::before {
+      color: #0ff;
+      z-index: -1;
+      animation: glitchAnim 1s infinite linear alternate-reverse;
+    }
+
+    .glitch::after {
+      color: #f0f;
+      z-index: -2;
+      animation: glitchAnim2 1.5s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitchSkew {
+      0% { transform: skew(0deg); }
+      10% { transform: skew(5deg); }
+      20% { transform: skew(-5deg); }
+      30% { transform: skew(3deg); }
+      40% { transform: skew(-3deg); }
+      50% { transform: skew(0deg); }
+      100% { transform: skew(0deg); }
+    }
+
+    @keyframes glitchAnim {
+      0% { clip-path: inset(0 0 80% 0); transform: translate(-2px, -2px); }
+      20% { clip-path: inset(10% 0 60% 0); transform: translate(2px, 2px); }
+      40% { clip-path: inset(20% 0 40% 0); transform: translate(-3px, 1px); }
+      60% { clip-path: inset(30% 0 30% 0); transform: translate(3px, -1px); }
+      80% { clip-path: inset(40% 0 20% 0); transform: translate(-1px, -2px); }
+      100% { clip-path: inset(50% 0 10% 0); transform: translate(1px, 1px); }
+    }
+
+    @keyframes glitchAnim2 {
+      0% { clip-path: inset(0 0 85% 0); transform: translate(1px, 1px); }
+      25% { clip-path: inset(15% 0 70% 0); transform: translate(-1px, -1px); }
+      50% { clip-path: inset(30% 0 50% 0); transform: translate(2px, 2px); }
+      75% { clip-path: inset(45% 0 25% 0); transform: translate(-2px, 2px); }
+      100% { clip-path: inset(60% 0 5% 0); transform: translate(0px, 0px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="status-dot" id="statusDot" title="Klik untuk nyalakan/matikan musik"></div>
+    <div class="username">
+      <span class="crown"><img src="https://files.catbox.moe/k2m22c.png" alt="crown"></span><span style="color: gold; text-shadow: 0 0 2px gold, 0 0 6px orange;">NullSiren</span>
+    </div>
+    <div class="avatar">
+      <img src="https://files.catbox.moe/p1bxmd.jpg" alt="avatar">
+    </div>
+    <div class="stars-container">
+      <div class="stars">
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+      </div>
+    </div>
+    <div class="rank">
+      <img src="https://files.catbox.moe/5bqlms.png" alt="ELITE">
+    </div>
+    <div class="info">
+      <p><span style="margin-right: 180px;">Posts</span> 32</p>
+      <p><span style="margin-right: 174px;">Threads</span> 4</p>
+      <p><span style="margin-right: 146px;">Joined</span> Jun 2025</p>
+      <p><span style="margin-right: 150px;">Reputation</span> <span class="reputation" style="color: gold; text-shadow: 0 0 2px gold, 0 0 5px orange;">427</span></p>
+    </div>
+  </div>
+
+  <div id="welcomeModal" class="modal">
+    <div class="modal-content">
+      <h3 class="glitch" data-text="HAS BEEN HACKED">HAS BEEN HACKED</h3>
+      <p style="font-size: 14px;">
+  <span style="color: red;">#Free</span><span style="color: white;">Pale</span><span style="color: limegreen;">stina</span> 🇵🇸&nbsp;&nbsp;
+  <span style="color: limegreen;">#Free</span><span style="color: white;">Ir</span><span style="color: red;">an</span> 🇮🇷
+</p>
+      <button id="confirmBtn">ENTER</button>
+    </div>
+  </div>
+
+  <audio id="bgMusic" loop>
+    <source src="https://files.catbox.moe/wfqcej.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const statusDot = document.getElementById("statusDot");
+    const bgMusic = document.getElementById("bgMusic");
+
+    let musicOn = localStorage.getItem("musicOn") !== "false";
+
+    if (!musicOn) {
+      statusDot.classList.add("off");
+    }
+
+    if (musicOn) {
+      bgMusic.play().catch(() => {
+        console.log("Autoplay diblokir oleh browser.");
+      });
+    }
+
+    statusDot.addEventListener("click", () => {
+      musicOn = !musicOn;
+      localStorage.setItem("musicOn", musicOn);
+      if (musicOn) {
+        bgMusic.play();
+        statusDot.classList.remove("off");
+      } else {
+        bgMusic.pause();
+        statusDot.classList.add("off");
+      }
+    });
+
+    const welcomeModal = document.getElementById("welcomeModal");
+    const confirmBtn = document.getElementById("confirmBtn");
+
+    if (!localStorage.getItem("acceptedWarning")) {
+      welcomeModal.style.display = "flex";
+    }
+
+    confirmBtn.addEventListener("click", () => {
+      localStorage.setItem("acceptedWarning", "true");
+      welcomeModal.style.display = "none";
+    });
+  </script>
+</body>
 </html>
