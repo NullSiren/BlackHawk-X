@@ -4,51 +4,67 @@
   <meta charset="UTF-8" />
   <title>Has been hacked by someone named NullSiren</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta property="og:title" content="HACKED BY NULLSIREN - BLACKHAWK" />
-  <meta property="og:image" content="https://files.catbox.moe/khlmy6.jpg" />
+  <meta property="og:title" content="Secure Layer Compromised — NullSiren Access Level High" />
+  <meta property="og:image" content="https://files.catbox.moe/dh870g.jpg" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700;800&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
 
-    body {
-      margin: 0;
-      background: url('https://files.catbox.moe/vce5am.jpg') no-repeat center center;
-      background-size: cover;
-      font-family: 'Oswald', sans-serif;
-      height: 100vh;
-      color: white;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
+ body {
+  margin: 0;
+  background: linear-gradient(135deg, #0f0f0f, #131313);
+  background-size: cover;
+  font-family: 'Oswald', sans-serif;
+  height: 100vh;
+  color: white;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+ }
 
-  .card {
+ body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, transparent 1px, transparent 2px),
+    url('https://www.transparenttextures.com/patterns/asfalt-light.png'); /* efek seperti noise */
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 1;
+ }
+
+ .card {
   background: #0c0c0c;
   width: 220px;
   padding: 14px;
   border-radius: 12px;
   box-shadow:
-    0 10px 40px rgba(0, 0, 0, 0.9),
-    14px 0 30px rgba(0, 0, 0, 0.6),
-    -14px 0 30px rgba(0, 0, 0, 0.6),
-    0 0 14px rgba(255, 255, 255, 0.03),
-    inset 0 0 10px #000,
-    inset 0 0 5px #111;
+    0 2px 6px rgba(0, 0, 0, 0.25),
+    2px 0 4px rgba(0, 0, 0, 0.15),
+    -2px 0 4px rgba(0, 0, 0, 0.15),
+    0 0 1px rgba(255, 255, 255, 0.01),
+    inset 0 0 1px #000,
+    inset 0 0 1px #111;
   text-align: center;
   position: relative;
-  }
+  z-index: 2;
+ }
 
     .username {
       font-size: 16px;
       font-weight: 800;
       margin-top: -4px;
       margin-bottom: 10px;
-      color: red;
+      color: gold;
       letter-spacing: 0.5px;
-      text-shadow: 0 0 2px red, 0 0 6px red;
+      text-shadow: 0 0 2px gold, 0 0 6px orange;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -57,7 +73,7 @@
 
     .username .crown img {
       width: 16px;
-      filter: drop-shadow(0 0 0px #ff0) drop-shadow(0 0 4px yellow);
+      filter: drop-shadow(0 0 2px #ffd700) drop-shadow(0 0 6px #ffa500);
     }
 
     .avatar img {
@@ -155,20 +171,25 @@
       max-width: 260px;
     }
 
-    .modal-content button {
-      margin-top: 15px;
-      background: transparent;
-      color: #00ff00;
-      border: 2px solid #00ff00;
-      padding: 8px 16px;
-      font-weight: bold;
-      font-family: 'Share Tech Mono', monospace;
-      border-radius: 6px;
-      cursor: pointer;
-      text-shadow: 0 0 5px #00ff00;
-      box-shadow: 0 0 10px #00ff00;
-      transition: all 0.3s ease;
-    }
+ .modal-content button {
+  margin-top: 15px;
+  background: transparent;
+  color: gold;
+  border: 2px solid gold;
+  padding: 8px 16px;
+  font-weight: bold;
+  font-family: 'Share Tech Mono', monospace;
+  border-radius: 6px;
+  cursor: pointer;
+  text-shadow: 0 0 3px gold, 0 0 4px orange;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+  transition: all 0.3s ease;
+ }
+
+.modal-content button:hover {
+  background: rgba(255, 215, 0, 0.08);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6), 0 0 14px rgba(255, 165, 0, 0.3);
+}
 
     .modal-content button:hover {
       background: rgba(0, 255, 0, 0.1);
@@ -237,7 +258,7 @@
   <div class="card">
     <div class="status-dot" id="statusDot" title="Klik untuk nyalakan/matikan musik"></div>
     <div class="username">
-      <span class="crown"><img src="https://files.catbox.moe/k2m22c.png" alt="crown"></span>Null Siren
+      <span class="crown"><img src="https://files.catbox.moe/k2m22c.png" alt="crown"></span><span style="color: gold; text-shadow: 0 0 2px gold, 0 0 6px orange;">NullSiren</span>
     </div>
     <div class="avatar">
       <img src="https://files.catbox.moe/p1bxmd.jpg" alt="avatar">
@@ -254,7 +275,7 @@
       <p><span style="margin-right: 180px;">Posts</span> 32</p>
       <p><span style="margin-right: 174px;">Threads</span> 4</p>
       <p><span style="margin-right: 146px;">Joined</span> Jun 2025</p>
-      <p><span style="margin-right: 150px;">Reputation</span> <span class="reputation" style="color: green;">427</span></p>
+      <p><span style="margin-right: 150px;">Reputation</span> <span class="reputation" style="color: gold; text-shadow: 0 0 2px gold, 0 0 5px orange;">427</span></p>
     </div>
   </div>
 
